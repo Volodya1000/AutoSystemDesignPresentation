@@ -1,0 +1,14 @@
+# Normalize text files to LF in the repository
+* text=auto
+
+# LaTeX and documentation sources
+*.tex text eol=lf
+*.bib text eol=lf
+*.sty text eol=lf
+*.cls text eol=lf
+*.md text eol=lf
+*.gitignore text eol=lf
+*.gitattributes text eol=lf
+
+# Generated PDF files are binary
+*.pdf binary
