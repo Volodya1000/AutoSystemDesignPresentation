@@ -64,7 +64,7 @@
   \vspace{0.30cm}%
 }
 
-\title[AutoSystemDesign]{Система автоматизации проектирования архитектуры микросервисных систем (AutoSystemDesign)}
+\title[AutoSystemDesign]{Инструмент автоматизации проектирования архитектуры микросервисных систем (AutoSystemDesign)}
 \author[Дичковский]{Дичковский Владимир}
 \date{}
 
@@ -87,7 +87,7 @@
   \vfill
   {\color{Accent}\rule{0.12\textwidth}{2pt}\par}
   \vspace{0.45cm}
-  {\LARGE\bfseries Система автоматизации проектирования\par}
+  {\LARGE\bfseries Инструмент автоматизации проектирования\par}
   \vspace{0.15cm}
   {\Large\bfseries архитектуры микросервисных систем\par}
   \vspace{0.25cm}
@@ -98,7 +98,7 @@
 \end{frame}
 
 % --------------------------------------------------
-\begin{frame}{Цель}
+\begin{frame}{Назначение}
 \textbf{Разработать инструмент для автоматизированного построения
 и проверки архитектурных моделей микросервисной системы на основе
 функциональных и нефункциональных требований и заданного профиля
@@ -136,20 +136,27 @@
 % --------------------------------------------------
 \begin{frame}{Извлечение требований из документа}
 
-\begin{center}
-\begin{tabular}{c}
-\textbf{Текст документа, например BRD}\\[0.12cm]
+\centering
+\fbox{\parbox{0.78\textwidth}{\centering
+\textbf{Документ с требованиями, например BRD}
+}}\\[0.10cm]
 $\downarrow$\\[0.10cm]
-\textbf{LLM выделяет требования и приводит исходные фрагменты}\\
-\textcolor{Muted}{Цитаты показывают, на каком тексте основано каждое требование}\\[0.12cm]
+\fbox{\parbox{0.78\textwidth}{\centering
+\textbf{LLM выделяет требования и исходные цитаты}
+}}\\[0.05cm]
+\textcolor{Muted}{Цитаты указывают, на каком фрагменте документа основано каждое требование.}\\[0.10cm]
 $\downarrow$\\[0.10cm]
-\textbf{Программа проверяет цитаты по исходному документу}\\[0.12cm]
+\fbox{\parbox{0.78\textwidth}{\centering
+\textbf{Программа проверяет цитаты по исходному документу}
+}}\\[0.10cm]
 $\downarrow$\\[0.10cm]
-\textbf{LLM сопоставляет проверенные требования с ожидаемыми полями доменной модели сценария}\\[0.12cm]
+\fbox{\parbox{0.78\textwidth}{\centering
+\textbf{LLM сопоставляет проверенные требования с ожидаемыми полями доменной модели сценария}
+}}\\[0.10cm]
 $\downarrow$\\[0.10cm]
+\fbox{\parbox{0.78\textwidth}{\centering
 \textbf{YAML-сценарий + JSON-манифест}
-\end{tabular}
-\end{center}
+}}
 
 \vfill
 \textcolor{Muted}{YAML-сценарий передаётся в существующий конвейер проектирования.}
@@ -178,6 +185,40 @@ $\downarrow$\\[0.10cm]
 
 \vfill
 \textcolor{Muted}{Сохраняется JSON-манифест с цитатами по полям и замечаниями.}
+
+\end{frame}
+
+% --------------------------------------------------
+\begin{frame}{Графический интерфейс}
+
+\begin{columns}[T,onlytextwidth]
+  \column{0.48\textwidth}
+  \fbox{\parbox[c][2.2cm][c]{0.95\linewidth}{\centering
+    \textbf{Ввод данных}\\[0.12cm]
+    YAML-сценарий или документ с требованиями
+  }}
+
+  \vspace{0.12cm}
+  \fbox{\parbox[c][2.2cm][c]{0.95\linewidth}{\centering
+    \textbf{Настройка генерации}\\[0.12cm]
+    Параметры модели и профиль нагрузки
+  }}
+
+  \column{0.48\textwidth}
+  \fbox{\parbox[c][2.2cm][c]{0.95\linewidth}{\centering
+    \textbf{Запуск конвейера}\\[0.12cm]
+    Генерация и проверка моделей
+  }}
+
+  \vspace{0.12cm}
+  \fbox{\parbox[c][2.2cm][c]{0.95\linewidth}{\centering
+    \textbf{Просмотр результатов}\\[0.12cm]
+    Диаграммы, спецификация API и сообщения валидаторов
+  }}
+\end{columns}
+
+\vfill
+\textcolor{Muted}{Интерфейс объединяет ввод требований, запуск проектирования и просмотр полученных артефактов.}
 
 \end{frame}
 
@@ -345,14 +386,14 @@ $\downarrow$\\[0.12cm]
 
 \begin{columns}[T,onlytextwidth]
   \column{0.48\textwidth}
-  {\color{Accent}\textbf{Разрешённые связи}}
+  {\color{Accent}\textbf{Пример разрешённых связей}}
   \begin{itemize}
     \item Клиент $\rightarrow$ вычислительный узел
     \item Вычислительный узел $\rightarrow$ база данных
   \end{itemize}
 
   \column{0.48\textwidth}
-  {\color{Muted}\textbf{Запрещённые связи}}
+  {\color{Muted}\textbf{Пример недопустимых связей}}
   \begin{itemize}
     \item Клиент $\rightarrow$ база данных
     \item База данных $\rightarrow$ вычислительный узел
