@@ -316,26 +316,23 @@ functional_requirements:
 % --------------------------------------------------
 \begin{frame}{Генерация и проверка}
 
-\begin{center}
-\begin{tabular}{c}
-\textbf{Требования и профиль нагрузки}\\[0.15cm]
-$\downarrow$\\[0.12cm]
-\textbf{LLM через LiteLLM}\\
-\textcolor{Muted}{Structured output по классам доменной модели}\\[0.15cm]
-$\downarrow$\\[0.12cm]
-\textbf{Типизированные модели и валидаторы}\\[0.15cm]
-$\downarrow$\\[0.12cm]
-\textbf{Генерация PlantUML и рендеринг}
-\end{tabular}
-\end{center}
-
-\vfill
-\begin{itemize}
-  \item LiteLLM позволяет обращаться к разным моделям через OpenAI-совместимый API.
-  \item LLM формирует structured output по классам доменной модели; код PlantUML она не пишет.
-  \item Доменная модель описывает архитектуру, функциональные требования и спецификацию API.
-  \item Рендерер преобразует эту модель в диаграммы; его можно заменить или дополнить, например, Mermaid, без изменения доменной модели.
-\end{itemize}
+\centering
+\fbox{\parbox[c][0.85cm][c]{0.78\textwidth}{\centering
+  \textbf{Функциональные требования и профиль нагрузки}
+}}\\[0.08cm]
+$\downarrow$\\[0.08cm]
+\fbox{\parbox[c][1.05cm][c]{0.78\textwidth}{\centering
+  \textbf{LLM через LiteLLM}\\
+  Структурированные данные по доменной модели
+}}\\[0.08cm]
+$\downarrow$\\[0.08cm]
+\fbox{\parbox[c][0.85cm][c]{0.78\textwidth}{\centering
+  \textbf{Типизированные модели и валидаторы}
+}}\\[0.08cm]
+$\downarrow$\\[0.08cm]
+\fbox{\parbox[c][0.95cm][c]{0.78\textwidth}{\centering
+  \textbf{Генерация PlantUML и рендеринг диаграмм}
+}}
 
 \end{frame}
 
