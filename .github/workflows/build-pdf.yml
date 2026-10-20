@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref || github.ref }}
 
       - name: Cache TeX Live package archives
         uses: actions/cache@v4
@@ -50,6 +52,19 @@ jobs:
           path: presentation.pdf
           if-no-files-found: error
           retention-days: 30
+
+      - name: Commit PDF to pull request branch
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add presentation.pdf
+          if git diff --cached --quiet; then
+            echo "presentation.pdf is unchanged."
+            exit 0
+          fi
+          git commit -m "docs: update compiled presentation PDF"
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
 
       - name: Commit PDF to main
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
