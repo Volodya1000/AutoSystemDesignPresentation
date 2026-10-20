@@ -258,30 +258,6 @@ $\downarrow$\\[0.10cm]
 \end{frame}
 
 % --------------------------------------------------
-\begin{frame}[fragile]{Пример входного YAML}
-
-\textbf{Структура сценария}
-\vspace{0.10cm}
-
-\begin{lstlisting}
-project_name: "social_network_chat"
-description: "Messaging module"
-workload:
-  baseline_requests_per_second: 500.0
-  peak_requests_per_second: 2500.0
-  read_ratio: 0.6
-requirements:
-  - type_identifier: latency
-    threshold_value: 150.0
-    percentile: 99.0
-functional_requirements:
-  - identifier: "req_msg_01"
-    name: "Direct Message Delivery"
-    text: >
-      Sender sends a message to a recipient.
-\end{lstlisting}
-
-\end{frame}
 
 % --------------------------------------------------
 \begin{frame}{Генерация и проверка}
