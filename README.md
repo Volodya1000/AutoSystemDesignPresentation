@@ -15,6 +15,6 @@ lualatex presentation.tex
 
 ## CI и PDF
 
-GitHub Actions автоматически компилирует `presentation.tex` в PDF при каждом push в `main`, для каждого pull request и вручную через вкладку Actions. Готовый `presentation.pdf` загружается как артефакт workflow с именем `AutoSystemDesignPresentation-pdf` и хранится 30 дней.
+GitHub Actions автоматически компилирует `presentation.tex` в PDF при каждом push в `main`, для каждого pull request и вручную через вкладку Actions.
 
-PDF не коммитится в репозиторий: его можно скачать со страницы соответствующего запуска Actions в разделе Artifacts.
+После успешной сборки при push в `main` файл `presentation.pdf` автоматически коммитится в корень репозитория, если его содержимое изменилось. Для pull request CI проверяет, что презентация компилируется, но не коммитит PDF в чужую ветку.
