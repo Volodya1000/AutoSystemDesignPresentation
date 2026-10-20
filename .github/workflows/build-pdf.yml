@@ -28,6 +28,8 @@ jobs:
 
       - name: Install LuaLaTeX and required fonts
         run: |
+          # Keep downloaded .deb files so actions/cache can save them.
+          sudo rm -f /etc/apt/apt.conf.d/docker-clean
           sudo apt-get update
           sudo apt-get install --no-install-recommends -y \
             fonts-dejavu-core \
