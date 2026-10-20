@@ -43,6 +43,14 @@ jobs:
           lualatex -interaction=nonstopmode -halt-on-error -file-line-error presentation.tex
           lualatex -interaction=nonstopmode -halt-on-error -file-line-error presentation.tex
 
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoSystemDesignPresentation-pdf
+          path: presentation.pdf
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Commit PDF to main
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
