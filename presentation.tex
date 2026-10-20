@@ -182,7 +182,7 @@ functional_requirements:
 \textbf{Требования и профиль нагрузки}\\[0.15cm]
 $\downarrow$\\[0.12cm]
 \textbf{LLM через LiteLLM}\\
-\textcolor{Muted}{Структурированные данные, JSON}\\[0.15cm]
+\textcolor{Muted}{Structured output по классам доменной модели}\\[0.15cm]
 $\downarrow$\\[0.12cm]
 \textbf{Типизированные модели и валидаторы}\\[0.15cm]
 $\downarrow$\\[0.12cm]
@@ -193,7 +193,7 @@ $\downarrow$\\[0.12cm]
 \vfill
 \begin{itemize}
   \item LiteLLM позволяет обращаться к разным моделям через OpenAI-совместимый API.
-  \item LLM возвращает структурированные данные, а не исходный код PlantUML.
+  \item LLM формирует structured output по классам доменной модели; код PlantUML она не пишет.
   \item Доменная модель описывает архитектуру, функциональные требования и спецификацию API.
   \item Рендерер преобразует эту модель в диаграммы; его можно заменить или дополнить, например, Mermaid, без изменения доменной модели.
 \end{itemize}
