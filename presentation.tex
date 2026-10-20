@@ -90,7 +90,7 @@
 
 \begin{columns}[T,onlytextwidth]
   \column{0.46\textwidth}
-  \textcolor{Muted}{\textbf{Пользователь передаёт на вход}}
+  {\color{Text}\bfseries\large Пользователь передаёт на вход:}
   \begin{itemize}
     \item BRD (документ бизнес-требований)
     \item Функциональные требования
@@ -99,17 +99,70 @@
   \end{itemize}
 
   \column{0.46\textwidth}
-  \textcolor{Muted}{\textbf{Пользователь получает на выход}}
+  {\color{Text}\bfseries\large Пользователь получает на выход:}
   \begin{itemize}
     \item C4 Component Diagram
-    \item Sequence-диаграммы
+    \item Отдельная Sequence-диаграмма для каждого функционального требования
     \item OpenAPI 3.1 и Swagger UI
   \end{itemize}
 \end{columns}
 
 \vfill
-\textcolor{Muted}{Сейчас вход задаётся в YAML.
-Извлечение требований из BRD планируется.}
+\textcolor{Muted}{Вход можно задать в YAML или передать документ BRD: требования из документа извлекаются автоматически.}
+
+\end{frame}
+
+% --------------------------------------------------
+\begin{frame}{Пример входного YAML}
+
+\begin{columns}[T,onlytextwidth]
+  \column{0.57\textwidth}
+  \textbf{Структура сценария}
+  \vspace{0.12cm}
+
+  \begin{lstlisting}[
+    basicstyle=\ttfamily\scriptsize,
+    backgroundcolor=\color{CodeBg},
+    frame=single,
+    rulecolor=\color{Line},
+    breaklines=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false
+  ]
+project_name: "social_network_chat"
+description: "Messaging module"
+workload:
+  baseline_requests_per_second: 500.0
+  peak_requests_per_second: 2500.0
+  read_ratio: 0.6
+requirements:
+  - type_identifier: latency
+    threshold_value: 150.0
+    percentile: 99.0
+functional_requirements:
+  - identifier: "req_msg_01"
+    name: "Direct Message Delivery"
+    text: >
+      Sender sends a message to a recipient.
+  \end{lstlisting}
+
+  \column{0.39\textwidth}
+  \centering
+  % PLACEHOLDER: replace this frame with an image when ready.
+  \fbox{
+    \parbox[c][3.7cm][c]{0.92\linewidth}{
+      \centering
+      \textcolor{Muted}{
+        Место для изображения\\[0.15cm]
+        примера входного YAML
+      }
+    }
+  }
+\end{columns}
+
+\vfill
+\textcolor{Muted}{YAML — один из вариантов входа; требования также извлекаются из документа BRD.}
 
 \end{frame}
 
@@ -226,6 +279,7 @@ $\downarrow$\\[0.15cm]
 \textbf{Текущие правила}
 
 \begin{itemize}
+  \item Для каждого функционального требования формируется отдельная диаграмма.
   \item Ссылки на существующие роли и узлы C4.
   \item Соответствие сценария исходному требованию.
   \item Использование всех объявленных линий жизни.
@@ -284,21 +338,13 @@ $\downarrow$\\[0.15cm]
 \end{frame}
 
 % --------------------------------------------------
-\begin{frame}{Дальнейшие планы}
+\begin{frame}{Дальнейшее развитие}
 
 \begin{itemize}
-  \item Подключить извлечение требований из неструктурированных документов.
   \item Расширить набор валидаторов архитектуры и сценариев.
   \item Добавить симуляционные и аналитические проверки нагрузки.
   \item Сохранить независимость модели от инструмента визуализации.
 \end{itemize}
-
-\vfill
-
-\textbf{Вопрос для обсуждения}
-
-Какие требования и проверки необходимы для применения
-инструмента в реальном процессе проектирования?
 
 \end{frame}
 
