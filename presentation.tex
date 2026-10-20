@@ -287,21 +287,33 @@ $\downarrow$\\[0.12cm]
 \vspace{0.10cm}
 \textcolor{Muted}{Профиль нагрузки (RPS) задаётся во входных данных.}
 
-\vspace{0.10cm}
-\textbf{Онтология связей}
-
-\begin{itemize}
-  \item \textbf{Разрешены:} клиент $\rightarrow$ балансировщик нагрузки;
-  вычислительный узел $\rightarrow$ база данных.
-  \item \textbf{Запрещены:} клиент $\rightarrow$ база данных;
-  балансировщик нагрузки $\rightarrow$ база данных.
-\end{itemize}
-
-\textcolor{Muted}{Онтология ограничивает допустимые пары типов узлов;
-для каждой связи задаётся протокол взаимодействия.}
-
 \vfill
 % \includegraphics[width=0.8\textwidth]{images/c4.png}
+
+\end{frame}
+
+% --------------------------------------------------
+\begin{frame}{Онтология связей между узлами}
+
+\begin{columns}[T,onlytextwidth]
+  \column{0.48\textwidth}
+  {\color{Accent}\textbf{Разрешённые связи}}
+  \begin{itemize}
+    \item Клиент $\rightarrow$ вычислительный узел
+    \item Вычислительный узел $\rightarrow$ база данных
+  \end{itemize}
+
+  \column{0.48\textwidth}
+  {\color{Muted}\textbf{Запрещённые связи}}
+  \begin{itemize}
+    \item Клиент $\rightarrow$ база данных
+    \item База данных $\rightarrow$ вычислительный узел
+  \end{itemize}
+\end{columns}
+
+\vfill
+\textcolor{Muted}{Онтология задаёт допустимые пары типов узлов;
+проверка выполняется до построения диаграммы.}
 
 \end{frame}
 
