@@ -13,10 +13,18 @@ permissions:
 jobs:
   build-pdf:
     name: Compile LaTeX presentation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Cache TeX Live package archives
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: texlive-apt-ubuntu-24.04-v1
+          restore-keys: |
+            texlive-apt-ubuntu-24.04-
 
       - name: Install LuaLaTeX and required fonts
         run: |
