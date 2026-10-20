@@ -60,7 +60,7 @@
 \setbeamertemplate{footline}{%
   \hfill
   {\usebeamerfont{footline}\usebeamercolor[fg]{footline}%
-   \insertshorttitle\hspace{0.4cm}\insertframenumber\hspace{0.8cm}}%
+   \insertframenumber\hspace{0.8cm}}%
   \vspace{0.30cm}%
 }
 
@@ -162,7 +162,6 @@ $\downarrow$\\[0.10cm]
 \fbox{\parbox{0.78\textwidth}{\centering
 \textbf{LLM выделяет требования и исходные цитаты}
 }}\\[0.05cm]
-\textcolor{Muted}{Цитаты указывают, на каком фрагменте документа основано каждое требование.}\\[0.10cm]
 $\downarrow$\\[0.10cm]
 \fbox{\parbox{0.78\textwidth}{\centering
 \textbf{Программа проверяет цитаты по исходному документу}
@@ -175,9 +174,6 @@ $\downarrow$\\[0.10cm]
 \fbox{\parbox{0.78\textwidth}{\centering
 \textbf{YAML-сценарий + JSON-манифест}
 }}
-
-\vfill
-\textcolor{Muted}{YAML-сценарий передаётся в существующий конвейер проектирования.}
 
 \end{frame}
 
@@ -294,10 +290,8 @@ $\downarrow$\\[0.10cm]
 % --------------------------------------------------
 \begin{frame}[fragile]{Пример входного YAML}
 
-\begin{columns}[T,onlytextwidth]
-  \column{0.57\textwidth}
-  \textbf{Структура сценария}
-  \vspace{0.10cm}
+\textbf{Структура сценария}
+\vspace{0.10cm}
 
 \begin{lstlisting}
 project_name: "social_network_chat"
@@ -316,19 +310,6 @@ functional_requirements:
     text: >
       Sender sends a message to a recipient.
 \end{lstlisting}
-
-  \column{0.39\textwidth}
-  \centering
-  % PLACEHOLDER: заменить на изображение
-  \fbox{\parbox[c][3.7cm][c]{0.92\linewidth}{%
-    \centering
-    \textcolor{Muted}{Место для изображения\\[0.15cm]примера входного YAML}%
-  }}
-\end{columns}
-
-\vfill
-\textcolor{Muted}{YAML — один из вариантов входа; требования также
-извлекаются из документа BRD.}
 
 \end{frame}
 
@@ -532,5 +513,24 @@ $\downarrow$\\[0.12cm]
   \item Сохранить независимость модели от инструмента визуализации.
 \end{itemize}
 \end{frame}
+
+% --------------------------------------------------
+% Слайды для изображений, которые будут добавлены вручную.
+\newcommand{\diagramplaceholder}[2]{%
+  \begin{frame}{#1}
+    \centering
+    \fbox{\parbox[c][0.72\textheight][c]{0.92\textwidth}{\centering
+      \textcolor{Muted}{#2}
+    }}
+  \end{frame}
+}
+
+\diagramplaceholder{Пример C4-диаграммы 1}{Место для изображения C4}
+\diagramplaceholder{Пример C4-диаграммы 2}{Место для изображения C4}
+\diagramplaceholder{Пример C4-диаграммы 3}{Место для изображения C4}
+\diagramplaceholder{Пример C4-диаграммы 4}{Место для изображения C4}
+\diagramplaceholder{Пример диаграммы последовательностей 1}{Место для изображения sequence}
+\diagramplaceholder{Пример диаграммы последовательностей 2}{Место для изображения sequence}
+\diagramplaceholder{Пример спецификации Swagger}{Место для изображения Swagger UI}
 
 \end{document}
