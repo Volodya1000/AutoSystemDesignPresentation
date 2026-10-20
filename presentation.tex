@@ -203,38 +203,8 @@ $\downarrow$\\[0.10cm]
 \end{frame}
 
 % --------------------------------------------------
-\begin{frame}{Графический интерфейс}
+% Графический интерфейс перенесён к описанию способов запуска.
 
-\begin{columns}[T,onlytextwidth]
-  \column{0.48\textwidth}
-  \fbox{\parbox[c][2.2cm][c]{0.95\linewidth}{\centering
-    \textbf{Ввод данных}\\[0.12cm]
-    YAML-сценарий или документ с требованиями
-  }}
-
-  \vspace{0.12cm}
-  \fbox{\parbox[c][2.2cm][c]{0.95\linewidth}{\centering
-    \textbf{Настройка генерации}\\[0.12cm]
-    Параметры модели и профиль нагрузки
-  }}
-
-  \column{0.48\textwidth}
-  \fbox{\parbox[c][2.2cm][c]{0.95\linewidth}{\centering
-    \textbf{Запуск конвейера}\\[0.12cm]
-    Генерация и проверка моделей
-  }}
-
-  \vspace{0.12cm}
-  \fbox{\parbox[c][2.2cm][c]{0.95\linewidth}{\centering
-    \textbf{Просмотр результатов}\\[0.12cm]
-    Диаграммы, спецификация API и сообщения валидаторов
-  }}
-\end{columns}
-
-\vfill
-\textcolor{Muted}{Интерфейс объединяет ввод требований, запуск проектирования и просмотр полученных артефактов.}
-
-\end{frame}
 
 % --------------------------------------------------
 \begin{frame}{Выходные артефакты}
@@ -389,7 +359,7 @@ $\downarrow$\\[0.08cm]
   \end{itemize}
 
   \column{0.48\textwidth}
-  {\color{Muted}\textbf{Пример недопустимых связей}}
+  {\color{Muted}\textcolor{red}{\textbf{Пример недопустимых связей}}}
   \begin{itemize}
     \item Клиент $\rightarrow$ база данных
     \item База данных $\rightarrow$ вычислительный узел
@@ -502,6 +472,42 @@ $\downarrow$\\[0.08cm]
 
 \end{frame}
 
+
+% --------------------------------------------------
+\begin{frame}{Графический интерфейс}
+
+\begin{columns}[T,onlytextwidth]
+  \column{0.48\textwidth}
+  \fbox{\parbox[c][2.2cm][c]{0.95\linewidth}{\centering
+    \textbf{Ввод данных}\\[0.12cm]
+    YAML-сценарий или документ с требованиями
+  }}
+
+  \vspace{0.12cm}
+  \fbox{\parbox[c][2.2cm][c]{0.95\linewidth}{\centering
+    \textbf{Настройка генерации}\\[0.12cm]
+    Параметры модели и профиль нагрузки
+  }}
+
+  \column{0.48\textwidth}
+  \fbox{\parbox[c][2.2cm][c]{0.95\linewidth}{\centering
+    \textbf{Запуск конвейера}\\[0.12cm]
+    Генерация и проверка моделей
+  }}
+
+  \vspace{0.12cm}
+  \fbox{\parbox[c][2.2cm][c]{0.95\linewidth}{\centering
+    \textbf{Просмотр результатов}\\[0.12cm]
+    Диаграммы, спецификация API и сообщения валидаторов
+  }}
+\end{columns}
+
+\vfill
+\textcolor{Muted}{Интерфейс объединяет ввод требований, запуск проектирования и просмотр полученных артефактов.}
+
+\end{frame}
+
+
 % --------------------------------------------------
 \begin{frame}{Дальнейшее развитие}
 \begin{itemize}
@@ -524,8 +530,6 @@ $\downarrow$\\[0.08cm]
 
 \diagramplaceholder{Пример C4-диаграммы 1}{Место для изображения C4}
 \diagramplaceholder{Пример C4-диаграммы 2}{Место для изображения C4}
-\diagramplaceholder{Пример C4-диаграммы 3}{Место для изображения C4}
-\diagramplaceholder{Пример C4-диаграммы 4}{Место для изображения C4}
 \diagramplaceholder{Пример диаграммы последовательностей 1}{Место для изображения sequence}
 \diagramplaceholder{Пример диаграммы последовательностей 2}{Место для изображения sequence}
 \diagramplaceholder{Пример спецификации Swagger}{Место для изображения Swagger UI}
