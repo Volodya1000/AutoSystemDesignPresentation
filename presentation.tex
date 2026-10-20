@@ -550,19 +550,25 @@ functional_requirements:
 
 % --------------------------------------------------
 % Слайды для изображений, которые будут добавлены вручную.
-\newcommand{\diagramplaceholder}[2]{%
+\newcommand{\diagramplaceholder}[3]{%
   \begin{frame}{#1}
     \centering
-    \fbox{\parbox[c][0.72\textheight][c]{0.92\textwidth}{\centering
-      \textcolor{Muted}{#2}
-    }}
+    \IfFileExists{images/#2}{%
+      \includegraphics[width=0.92\textwidth,height=0.72\textheight,keepaspectratio]{images/#2}%
+    }{%
+      \fbox{\parbox[c][0.55\textheight][c]{0.86\textwidth}{\centering
+        \textcolor{Muted}{Изображение будет добавлено вручную}\par\vspace{0.25cm}
+        \texttt{\detokenize{images/#2}}\par\vspace{0.2cm}
+        \textcolor{Muted}{#3}
+      }}%
+    }%
   \end{frame}
 }
 
-\diagramplaceholder{Пример C4-диаграммы 1}{Место для изображения C4}
-\diagramplaceholder{Пример C4-диаграммы 2}{Место для изображения C4}
-\diagramplaceholder{Пример диаграммы последовательностей 1}{Место для изображения sequence}
-\diagramplaceholder{Пример диаграммы последовательностей 2}{Место для изображения sequence}
-\diagramplaceholder{Пример спецификации Swagger}{Место для изображения Swagger UI}
+\diagramplaceholder{Пример C4-диаграммы 1}{c4_example_1.png}{Место для изображения C4}
+\diagramplaceholder{Пример C4-диаграммы 2}{c4_example_2.png}{Место для изображения C4}
+\diagramplaceholder{Пример диаграммы последовательностей 1}{sequence_example_1.png}{Место для изображения sequence}
+\diagramplaceholder{Пример диаграммы последовательностей 2}{sequence_example_2.png}{Место для изображения sequence}
+\diagramplaceholder{Пример спецификации Swagger}{swagger_ui.png}{Место для изображения Swagger UI}
 
 \end{document}
