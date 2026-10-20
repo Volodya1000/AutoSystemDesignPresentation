@@ -414,14 +414,14 @@ functional_requirements:
 \begin{frame}{Протоколы взаимодействия между узлами}
 
 \begin{itemize}
-  \item HTTP (REST)
-  \item gRPC
-  \item TCP
-  \item Message Queue
+  \item LLM выбирает протокол для каждой связи в графе: HTTP (REST), gRPC, TCP или Message Queue.
+  \item Выбор сохраняется в модели архитектуры и отражает способ обмена данными между узлами.
+  \item Расчётные валидаторы учитывают протокол при оценке задержек и характеристик взаимодействия.
+  \item При генерации диаграммы последовательностей протокол также определяет способ представления обмена сообщениями.
 \end{itemize}
 
-\vspace{0.2cm}
-\textbf{Планируется добавить:} Webhooks, Long Polling, Server-Sent Events (SSE)
+\vspace{0.15cm}
+\textbf{Планируется добавить:} Webhooks, Long Polling, Server-Sent Events (SSE).
 
 \end{frame}
 
