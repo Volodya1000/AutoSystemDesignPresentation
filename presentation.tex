@@ -1,10 +1,20 @@
 \documentclass[aspectratio=169,10pt]{beamer}
 
-% Компиляция: LuaLaTeX
+% Компиляция: lualatex (или latexmk -lualatex)
 \usepackage{fontspec}
-\usepackage[russian]{babel}
+\usepackage{babel}
+\babelprovide[import,main]{russian}
+\babelprovide[import]{english}
+
+% --- Шрифты с гарантированной кириллицей (есть в TeX Live) ---
+% Если у вас установлены Arial / Consolas, можно заменить на:
+%   \setsansfont{Arial}
+%   \setmonofont{Consolas}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+\babelfont{rm}{DejaVu Serif}
+
 \usepackage{graphicx}
-\usepackage{booktabs}
 \usepackage{listings}
 \usepackage{xcolor}
 
@@ -15,20 +25,19 @@
 \definecolor{Line}{HTML}{D9DEE7}
 \definecolor{CodeBg}{HTML}{F3F5F8}
 
-% --- Шрифт ---
-\setsansfont{Arial}
-\setmonofont{Consolas}
-
 % --- Оформление ---
 \usetheme{default}
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{itemize items}[circle]
-\setbeamercolor{normal text}{fg=Text,bg=white}
-\setbeamercolor{frametitle}{fg=Text,bg=white}
+\setbeamertemplate{itemize subitem}[triangle]
+
+% bg оставляем пустым, иначе возможен эффект "белое на белом"
+\setbeamercolor{normal text}{fg=Text,bg=}
+\setbeamercolor{frametitle}{fg=Text,bg=}
 \setbeamercolor{structure}{fg=Accent}
 \setbeamercolor{itemize item}{fg=Accent}
 \setbeamercolor{itemize subitem}{fg=Muted}
-\setbeamercolor{footline}{fg=Muted,bg=white}
+\setbeamercolor{footline}{fg=Muted,bg=}
 
 \setbeamersize{
   text margin left=0.8cm,
@@ -36,43 +45,52 @@
 }
 
 \setbeamerfont{frametitle}{size=\Large,series=\bfseries}
+\setbeamerfont{footline}{size=\scriptsize}
 \setbeamerfont{normal text}{size=\small}
 
-\setbeamertemplate{frametitle}{
-  \vspace{0.25cm}
-  \insertframetitle
-  \par\vspace{0.12cm}
-  {\color{Accent}\rule{\textwidth}{0.7pt}}
-  \vspace{-0.15cm}
+% Заголовок кадра: линия ровно по ширине текстового блока
+\setbeamertemplate{frametitle}{%
+  \vspace{0.25cm}%
+  \insertframetitle\par
+  \vspace{0.08cm}%
+  {\color{Accent}\rule{\textwidth}{0.7pt}}%
+  \vspace{0.10cm}%
 }
 
-\setbeamertemplate{footline}{
+\setbeamertemplate{footline}{%
   \hfill
-  \usebeamerfont{footline}
-  \insertshorttitle
-  \hspace{0.4cm}
-  \insertframenumber
-  \hspace{0.8cm}
-  \vspace{0.35cm}
+  {\usebeamerfont{footline}\usebeamercolor[fg]{footline}%
+   \insertshorttitle\hspace{0.4cm}\insertframenumber\hspace{0.8cm}}%
+  \vspace{0.30cm}%
 }
 
 \title[AutoSystemDesign]{AutoSystemDesign}
-\author{Дичковский Владимир}
+\author[Дичковский]{Дичковский Владимир}
 \date{}
+
+% --- Настройки листингов ---
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  backgroundcolor=\color{CodeBg},
+  frame=single,
+  rulecolor=\color{Line},
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false
+}
 
 \begin{document}
 
 % --------------------------------------------------
 \begin{frame}[plain]
   \vfill
-  {\color{Accent}\rule{0.12\textwidth}{2pt}}
-
+  {\color{Accent}\rule{0.12\textwidth}{2pt}\par}
   \vspace{0.45cm}
   {\LARGE\bfseries AutoSystemDesign\par}
-
   \vspace{0.35cm}
-  {\large Автоматизация проектирования архитектуры микросервисных систем\par}
-
+  {\large Автоматизация проектирования архитектуры
+   микросервисных систем\par}
   \vspace{0.8cm}
   {\normalsize Дичковский Владимир\par}
   \vfill
@@ -82,15 +100,16 @@
 \begin{frame}{Цель}
 \textbf{Разработать инструмент для автоматизированного построения
 и проверки архитектурных моделей микросервисной системы на основе
-функциональных и нефункциональных требований и заданного профиля нагрузки.}
+функциональных и нефункциональных требований и заданного профиля
+нагрузки.}
 \end{frame}
 
 % --------------------------------------------------
 \begin{frame}{Входные данные и результаты}
 
 \begin{columns}[T,onlytextwidth]
-  \column{0.46\textwidth}
-  \textcolor{Muted}{\textbf{Пользователь передаёт на вход}}
+  \column{0.47\textwidth}
+  {\bfseries\large Пользователь передаёт на вход:}
   \begin{itemize}
     \item BRD (документ бизнес-требований)
     \item Функциональные требования
@@ -98,18 +117,59 @@
     \item Профиль нагрузки
   \end{itemize}
 
-  \column{0.46\textwidth}
-  \textcolor{Muted}{\textbf{Пользователь получает на выход}}
+  \column{0.47\textwidth}
+  {\bfseries\large Пользователь получает на выход:}
   \begin{itemize}
     \item C4 Component Diagram
-    \item Sequence-диаграммы
+    \item Sequence-диаграмма на каждое функциональное требование
     \item OpenAPI 3.1 и Swagger UI
   \end{itemize}
 \end{columns}
 
 \vfill
-\textcolor{Muted}{Сейчас вход задаётся в YAML.
-Извлечение требований из BRD планируется.}
+\textcolor{Muted}{Вход можно задать в YAML или передать документ BRD:
+требования из документа извлекаются автоматически.}
+
+\end{frame}
+
+% --------------------------------------------------
+\begin{frame}[fragile]{Пример входного YAML}
+
+\begin{columns}[T,onlytextwidth]
+  \column{0.57\textwidth}
+  \textbf{Структура сценария}
+  \vspace{0.10cm}
+
+\begin{lstlisting}
+project_name: "social_network_chat"
+description: "Messaging module"
+workload:
+  baseline_requests_per_second: 500.0
+  peak_requests_per_second: 2500.0
+  read_ratio: 0.6
+requirements:
+  - type_identifier: latency
+    threshold_value: 150.0
+    percentile: 99.0
+functional_requirements:
+  - identifier: "req_msg_01"
+    name: "Direct Message Delivery"
+    text: >
+      Sender sends a message to a recipient.
+\end{lstlisting}
+
+  \column{0.39\textwidth}
+  \centering
+  % PLACEHOLDER: заменить на изображение
+  \fbox{\parbox[c][3.7cm][c]{0.92\linewidth}{%
+    \centering
+    \textcolor{Muted}{Место для изображения\\[0.15cm]примера входного YAML}%
+  }}
+\end{columns}
+
+\vfill
+\textcolor{Muted}{YAML — один из вариантов входа; требования также
+извлекаются из документа BRD.}
 
 \end{frame}
 
@@ -118,19 +178,18 @@
 
 \begin{center}
 \begin{tabular}{c}
-\textbf{Требования и профиль нагрузки}\\[0.2cm]
-$\downarrow$\\[0.15cm]
+\textbf{Требования и профиль нагрузки}\\[0.15cm]
+$\downarrow$\\[0.12cm]
 \textbf{LLM через LiteLLM}\\
-\textcolor{Muted}{Структурированные данные, JSON}\\[0.2cm]
-$\downarrow$\\[0.15cm]
-\textbf{Типизированные модели и валидаторы}\\[0.2cm]
-$\downarrow$\\[0.15cm]
+\textcolor{Muted}{Структурированные данные, JSON}\\[0.15cm]
+$\downarrow$\\[0.12cm]
+\textbf{Типизированные модели и валидаторы}\\[0.15cm]
+$\downarrow$\\[0.12cm]
 \textbf{Генерация PlantUML и рендеринг}
 \end{tabular}
 \end{center}
 
 \vfill
-
 \begin{itemize}
   \item LiteLLM поддерживает разные модели через совместимые API.
   \item LLM не генерирует исходный код диаграмм.
@@ -143,27 +202,25 @@ $\downarrow$\\[0.15cm]
 \begin{frame}{Модель архитектуры C4}
 
 \textbf{Типы узлов}
-
 \begin{itemize}
   \item Клиент, балансировщик нагрузки
   \item Вычислительный узел
   \item База данных, кэш, брокер сообщений
 \end{itemize}
 
-\vspace{0.25cm}
+\vspace{0.20cm}
 \textbf{Параметры модели}
 
 Число реплик, параллелизм, время обработки, размер очереди,
 стоимость компонентов и профиль запросов (RPS).
 
-\vspace{0.25cm}
+\vspace{0.20cm}
 \textbf{Связи}
 
 Разрешены только определённые пары типов узлов.
 Для каждой связи задаётся протокол взаимодействия.
 
 \vfill
-% При наличии реального результата:
 % \includegraphics[width=0.8\textwidth]{images/c4.png}
 
 \end{frame}
@@ -172,7 +229,7 @@ $\downarrow$\\[0.15cm]
 \begin{frame}{Текущие валидаторы C4}
 
 \begin{columns}[T,onlytextwidth]
-  \column{0.48\textwidth}
+  \column{0.47\textwidth}
   \textbf{Структура}
   \begin{itemize}
     \item Уникальность узлов
@@ -181,7 +238,7 @@ $\downarrow$\\[0.15cm]
     \item Нет изолированных узлов
   \end{itemize}
 
-  \column{0.48\textwidth}
+  \column{0.47\textwidth}
   \textbf{Семантика и расчёты}
   \begin{itemize}
     \item Производитель и потребитель брокера
@@ -201,19 +258,15 @@ $\downarrow$\\[0.15cm]
 \begin{frame}{Развитие валидации C4}
 
 \textbf{Планируемые направления}
-
 \begin{itemize}
   \item Симуляция нагрузки с помощью SimPy.
   \item Модели на основе теории массового обслуживания.
   \item Анализ очередей, задержек и насыщения под нагрузкой.
 \end{itemize}
 
-\vspace{0.5cm}
-
-\textcolor{Muted}{
-Цель: дополнить статические проверки оценкой поведения
-модели при заданном профиле нагрузки.
-}
+\vspace{0.4cm}
+\textcolor{Muted}{Цель: дополнить статические проверки оценкой
+поведения модели при заданном профиле нагрузки.}
 
 \vfill
 \textcolor{Accent}{Планируемые возможности, не текущая реализация.}
@@ -224,8 +277,8 @@ $\downarrow$\\[0.15cm]
 \begin{frame}{Валидаторы Sequence}
 
 \textbf{Текущие правила}
-
 \begin{itemize}
+  \item На каждое функциональное требование — отдельная диаграмма.
   \item Ссылки на существующие роли и узлы C4.
   \item Соответствие сценария исходному требованию.
   \item Использование всех объявленных линий жизни.
@@ -233,14 +286,12 @@ $\downarrow$\\[0.15cm]
   \item События и уведомления должны быть асинхронными.
 \end{itemize}
 
-\vspace{0.35cm}
-
+\vspace{0.25cm}
 \textbf{Дальнейшее развитие}
 
 Расширение проверок семантики сообщений и ветвлений сценария.
 
 \vfill
-% При наличии реального результата:
 % \includegraphics[width=0.8\textwidth]{images/sequence.png}
 
 \end{frame}
@@ -249,57 +300,40 @@ $\downarrow$\\[0.15cm]
 \begin{frame}{REST API: OpenAPI и Swagger}
 
 \begin{columns}[T,onlytextwidth]
-  \column{0.43\textwidth}
+  \column{0.45\textwidth}
   \textbf{OpenAPI 3.1}
-
   \begin{itemize}
     \item Операции и маршруты
     \item Параметры и схемы
     \item Связь с требованиями и узлами C4
   \end{itemize}
 
-  \vspace{0.2cm}
+  \vspace{0.15cm}
   \textbf{Проверки}
-
   \begin{itemize}
     \item Уникальность операций
     \item Коллизии маршрутов
     \item Согласованность ссылок
   \end{itemize}
 
-  \column{0.53\textwidth}
-  % Заменить на скриншот реального Swagger UI:
+  \column{0.51\textwidth}
   \centering
-  \fbox{
-    \parbox[c][4cm][c]{0.9\linewidth}{
-      \centering
-      \textcolor{Muted}{
-        Здесь скриншот\\
-        сгенерированного Swagger UI
-      }
-    }
-  }
+  % Скриншот реального Swagger UI
+  \fbox{\parbox[c][4cm][c]{0.9\linewidth}{%
+    \centering
+    \textcolor{Muted}{Здесь скриншот\\сгенерированного Swagger UI}%
+  }}
 \end{columns}
 
 \end{frame}
 
 % --------------------------------------------------
-\begin{frame}{Дальнейшие планы}
-
+\begin{frame}{Дальнейшее развитие}
 \begin{itemize}
-  \item Подключить извлечение требований из неструктурированных документов.
   \item Расширить набор валидаторов архитектуры и сценариев.
   \item Добавить симуляционные и аналитические проверки нагрузки.
   \item Сохранить независимость модели от инструмента визуализации.
 \end{itemize}
-
-\vfill
-
-\textbf{Вопрос для обсуждения}
-
-Какие требования и проверки необходимы для применения
-инструмента в реальном процессе проектирования?
-
 \end{frame}
 
 \end{document}
