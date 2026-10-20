@@ -1,0 +1,42 @@
+name: Build presentation PDF
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-pdf:
+    name: Compile LaTeX presentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install LuaLaTeX and required fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            fonts-dejavu-core \
+            texlive-luatex \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-lang-cyrillic
+
+      - name: Compile PDF
+        run: |
+          lualatex -interaction=nonstopmode -halt-on-error -file-line-error presentation.tex
+          lualatex -interaction=nonstopmode -halt-on-error -file-line-error presentation.tex
+
+      - name: Upload compiled PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoSystemDesignPresentation-pdf
+          path: presentation.pdf
+          if-no-files-found: error
+          retention-days: 30
