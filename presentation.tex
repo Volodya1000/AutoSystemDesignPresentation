@@ -1,560 +1,237 @@
 \documentclass[aspectratio=169,10pt]{beamer}
 
-% Компиляция: lualatex (или latexmk -lualatex)
+% Компиляция: lualatex presentation.tex
 \usepackage{fontspec}
 \usepackage{babel}
 \babelprovide[import,main]{russian}
 \babelprovide[import]{english}
-
-% --- Шрифты с гарантированной кириллицей (есть в TeX Live) ---
-% Если у вас установлены Arial / Consolas, можно заменить на:
-%   \setsansfont{Arial}
-%   \setmonofont{Consolas}
 \setsansfont{DejaVu Sans}
 \setmonofont{DejaVu Sans Mono}
 \babelfont{rm}{DejaVu Serif}
 
 \usepackage{graphicx}
-\usepackage{listings}
 \usepackage{xcolor}
 
-% --- Цвета ---
 \definecolor{Accent}{HTML}{2457A7}
 \definecolor{Text}{HTML}{202733}
 \definecolor{Muted}{HTML}{667085}
 \definecolor{Line}{HTML}{D9DEE7}
-\definecolor{CodeBg}{HTML}{F3F5F8}
+\definecolor{Panel}{HTML}{F3F5F8}
 
-% --- Оформление ---
 \usetheme{default}
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{itemize items}[circle]
-\setbeamertemplate{itemize subitem}[triangle]
-
-% bg оставляем пустым, иначе возможен эффект "белое на белом"
 \setbeamercolor{normal text}{fg=Text,bg=}
 \setbeamercolor{frametitle}{fg=Text,bg=}
 \setbeamercolor{structure}{fg=Accent}
 \setbeamercolor{itemize item}{fg=Accent}
-\setbeamercolor{itemize subitem}{fg=Muted}
 \setbeamercolor{footline}{fg=Muted,bg=}
-
-\setbeamersize{
-  text margin left=0.8cm,
-  text margin right=0.8cm
-}
-
+\setbeamersize{text margin left=0.85cm,text margin right=0.85cm}
 \setbeamerfont{frametitle}{size=\Large,series=\bfseries}
-\setbeamerfont{footline}{size=\scriptsize}
 \setbeamerfont{normal text}{size=\small}
+\setbeamerfont{footline}{size=\scriptsize}
 
-% Заголовок кадра: линия ровно по ширине текстового блока
 \setbeamertemplate{frametitle}{%
-  \vspace{0.25cm}%
+  \vspace{0.24cm}%
   \insertframetitle\par
   \vspace{0.08cm}%
   {\color{Accent}\rule{\textwidth}{0.7pt}}%
   \vspace{0.10cm}%
 }
-
 \setbeamertemplate{footline}{%
-  \hfill
-  {\usebeamerfont{footline}\usebeamercolor[fg]{footline}%
-   \insertframenumber\hspace{0.8cm}}%
+  \hfill{\usebeamerfont{footline}\insertframenumber\hspace{0.8cm}}%
   \vspace{0.30cm}%
 }
 
-\title[AutoSystemDesign]{Инструмент автоматизации проектирования архитектуры микросервисных систем (AutoSystemDesign)}
-\author[Дичковский]{Дичковский Владимир}
-\date{}
-
-% --- Настройки листингов ---
-\lstset{
-  basicstyle=\ttfamily\scriptsize,
-  backgroundcolor=\color{CodeBg},
-  frame=single,
-  rulecolor=\color{Line},
-  breaklines=true,
-  columns=fullflexible,
-  keepspaces=true,
-  showstringspaces=false
+% Компактный текстовый блок без технических подробностей.
+\newcommand{\shortpanel}[2]{%
+  \fcolorbox{Line}{Panel}{%
+    \parbox[c][1.8cm][c]{0.88\linewidth}{%
+      \centering\textbf{#1}\par\vspace{0.15cm}%
+      {\footnotesize #2}%
+    }%
+  }%
 }
 
 \begin{document}
 
-% --------------------------------------------------
+% 1. Тема и автор.
 \begin{frame}[plain]
   \vfill
-  {\color{Accent}\rule{0.12\textwidth}{2pt}\par}
-  \vspace{0.45cm}
-  {\LARGE\bfseries Инструмент автоматизации проектирования\par}
-  \vspace{0.15cm}
-  {\Large\bfseries архитектуры микросервисных систем\par}
-  \vspace{0.25cm}
-  {\large AutoSystemDesign\par}
-  \vspace{0.8cm}
+  {\color{Accent}\rule{0.13\textwidth}{2pt}\par}
+  \vspace{0.42cm}
+  {\LARGE\bfseries AutoSystemDesign\par}
+  \vspace{0.22cm}
+  {\Large От бизнес-требований к первой версии архитектуры\par}
+  \vspace{0.66cm}
   {\normalsize Дичковский Владимир\par}
   \vfill
 \end{frame}
 
-% --------------------------------------------------
-\begin{frame}{Возможности инструмента}
-
-\begin{columns}[T,onlytextwidth]
-  \column{0.48\textwidth}
-  \textbf{Построение архитектуры}
-  \begin{itemize}
-    \item Формирование архитектурной модели по функциональным и нефункциональным требованиям.
-    \item Генерация диаграмм компонентов и последовательностей.
-    \item Формирование спецификации API.
-  \end{itemize}
-
-  \column{0.48\textwidth}
-  \textbf{Проверка и анализ}
-  \begin{itemize}
-    \item Проверка структуры и связей архитектурной модели.
-    \item Расчётная оценка нагрузки и задержек.
-    \item Извлечение требований из документа с цитатами, подтверждающими исходный текст.
-  \end{itemize}
-\end{columns}
-
-\vfill
-\textcolor{Muted}{Результаты формируются в виде архитектурных моделей и связанных с ними артефактов.}
-
+% 2. Что получает архитектор.
+\begin{frame}{От BRD к проектному решению}
+  \vspace{0.35cm}
+  \begin{columns}[c,onlytextwidth]
+    \column{0.34\textwidth}
+      \fcolorbox{Line}{Panel}{\parbox[c][3.5cm][c]{0.89\linewidth}{%
+        \centering
+        {\Large\bfseries BRD}\par\vspace{0.18cm}
+        Документ бизнес-требований заказчика
+      }}
+    \column{0.11\textwidth}
+      \centering{\color{Accent}\Huge$\longrightarrow$}
+    \column{0.55\textwidth}
+      {\large\bfseries Первая версия архитектуры}\par\vspace{0.28cm}
+      \begin{itemize}
+        \setlength{\itemsep}{0.22cm}
+        \item Диаграмма компонентов C4
+        \item Сценарии взаимодействия
+        \item Описание REST API
+        \item Расчётная оценка нагрузки
+      \end{itemize}
+  \end{columns}
+  \vfill
+  {\small\color{Muted}Инструмент помогает подготовить решение к обсуждению с архитектором.}
 \end{frame}
 
-% --------------------------------------------------
-\begin{frame}{Входные данные и результаты}
-
-\begin{columns}[T,onlytextwidth]
-  \column{0.47\textwidth}
-  {\bfseries\large Пользователь передаёт на вход:}
-  \begin{itemize}
-    \item BRD (документ бизнес-требований)
-    \item Функциональные требования
-    \item Нефункциональные требования
-    \item Профиль нагрузки
-  \end{itemize}
-
-  \column{0.47\textwidth}
-  {\bfseries\large Пользователь получает на выход:}
-  \begin{itemize}
-    \item C4 Component Diagram
-    \item Sequence-диаграмма на каждое функциональное требование
-    \item OpenAPI 3.1 и Swagger UI
-  \end{itemize}
-\end{columns}
-
-\vfill
-\textcolor{Muted}{Вход можно задать в YAML или передать документ BRD:
-требования из документа извлекаются автоматически.}
-
-\end{frame}
-
-% --------------------------------------------------
-\begin{frame}{Извлечение требований из документа}
-
-\centering
-\fbox{\parbox{0.78\textwidth}{\centering
-\textbf{Документ с требованиями, например BRD}
-}}\\[0.10cm]
-$\downarrow$\\[0.10cm]
-\fbox{\parbox{0.78\textwidth}{\centering
-\textbf{LLM выделяет требования и исходные цитаты}
-}}\\[0.05cm]
-$\downarrow$\\[0.10cm]
-\fbox{\parbox{0.78\textwidth}{\centering
-\textbf{Программа проверяет цитаты по исходному документу}
-}}\\[0.10cm]
-$\downarrow$\\[0.10cm]
-\fbox{\parbox{0.78\textwidth}{\centering
-\textbf{LLM сопоставляет проверенные требования с ожидаемыми полями доменной модели сценария}
-}}\\[0.10cm]
-$\downarrow$\\[0.10cm]
-\fbox{\parbox{0.78\textwidth}{\centering
-\textbf{Структурированный сценарий для конвейера проектирования}
-}}
-
-\end{frame}
-
-% --------------------------------------------------
-\begin{frame}{Проверка достоверности извлечённых данных}
-
-\begin{columns}[T,onlytextwidth]
-  \column{0.48\textwidth}
-  \textbf{Правила проверки}
-  \begin{itemize}
-    \item Каждая цитата должна присутствовать в исходном тексте.
-    \item Значения полей сценария сопровождаются проверенными цитатами.
-    \item Числа должны буквально встречаться в цитате: пересчёт единиц не выполняется.
-  \end{itemize}
-
-  \column{0.48\textwidth}
-  \textbf{Если подтверждения нет}
-  \begin{itemize}
-    \item Неподтверждённые утверждения и значения исключаются с указанием причины.
-    \item Неоднозначности и противоречия сохраняются для проверки человеком.
-  \end{itemize}
-\end{columns}
-
-\vfill
-\textcolor{Muted}{Для извлечённых значений сохраняются исходные цитаты и результаты проверки.}
-
-\end{frame}
-
-% --------------------------------------------------
-% Графический интерфейс перенесён к описанию способов запуска.
-
-
-% --------------------------------------------------
-\begin{frame}{Выходные артефакты}
-
-\begin{columns}[T,onlytextwidth]
-  \column{0.32\textwidth}
-  \textbf{Диаграмма компонентов}
-  \begin{itemize}
-    \item Скомпилированное изображение в выбранном формате (PNG/JPG)
-    \item Исходный код PlantUML
-    \item JSON доменной модели архитектуры компонентов
-  \end{itemize}
-
-  \column{0.32\textwidth}
-  \textbf{Диаграмма последовательностей}
-  \begin{itemize}
-    \item Скомпилированное изображение в выбранном формате (PNG/JPG)
-    \item Исходный код PlantUML
-    \item JSON доменной модели диаграммы последовательностей
-  \end{itemize}
-
-  \column{0.32\textwidth}
-  \textbf{Спецификация API}
-  \begin{itemize}
-    \item Спецификация OpenAPI в формате JSON
-    \item Swagger UI в формате HTML
-  \end{itemize}
-\end{columns}
-
-\vfill
-\textcolor{Muted}{Изображения предназначены для просмотра, PlantUML — для редактирования диаграмм, JSON — для повторного использования структурированных моделей.}
-
-\end{frame}
-
-% --------------------------------------------------
-\begin{frame}{Варианты сервера рендеринга PlantUML}
-
-Для компиляции исходного кода PlantUML в изображение доступны три варианта:
-
-\begin{enumerate}
-  \item \textbf{Локальный сервер PlantUML, развёртываемый через Docker Compose}\\
-  Развёртывается вместе с проектом; конфигурация включена в репозиторий.
-  \item \textbf{Официальный сервер PlantUML}\\
-  Используется размещённый разработчиками PlantUML сервер.
-  \item \textbf{Kroki}\\
-  Универсальный сервис рендеринга диаграмм, поддерживающий PlantUML и другие форматы.
-\end{enumerate}
-
-\vfill
-
-\end{frame}
-
-% --------------------------------------------------
-
-% --------------------------------------------------
-\begin{frame}{Генерация и проверка}
-
-\begin{columns}[T,onlytextwidth]
-  \column{0.58\textwidth}
-  \textbf{Конвейер генерации}
-  \centering
-  \fbox{\parbox[c][0.65cm][c]{0.94\linewidth}{\centering
-    Функциональные требования и профиль нагрузки
-  }}\\[0.06cm]
-  $\downarrow$\\[0.06cm]
-  \fbox{\parbox[c][0.8cm][c]{0.94\linewidth}{\centering
-    \textbf{LLM через LiteLLM}\\
-    Structured output по доменной модели
-  }}\\[0.06cm]
-  $\downarrow$\\[0.06cm]
-  \fbox{\parbox[c][0.65cm][c]{0.94\linewidth}{\centering
-    Типизированные модели и валидаторы
-  }}\\[0.06cm]
-  $\downarrow$\\[0.06cm]
-  \fbox{\parbox[c][0.65cm][c]{0.94\linewidth}{\centering
-    Генерация кода PlantUML
-  }}\\[0.06cm]
-  $\downarrow$\\[0.06cm]
-  \fbox{\parbox[c][0.65cm][c]{0.94\linewidth}{\centering
-    Рендеринг PlantUML в изображение
-  }}
-
-  \column{0.39\textwidth}
-  \textbf{Ключевые принципы}
-  {\footnotesize
-  \begin{itemize}
-    \item LiteLLM позволяет обращаться к разным моделям через OpenAI-совместимый API.
-    \item LLM формирует структурированный вывод по классам доменной модели; код PlantUML она не пишет.
-    \item Доменная модель описывает архитектуру, функциональные требования и спецификацию API.
-    \item Рендерер преобразует эту модель в диаграммы; его можно заменить или дополнить, например, Mermaid, без изменения доменной модели.
-  \end{itemize}
-  }
-\end{columns}
-
-\end{frame}
-
-% --------------------------------------------------
-% --------------------------------------------------
-\begin{frame}{Повторная генерация при ошибках}
-
-\begin{enumerate}
-  \item LLM формирует структурированный ответ по классам доменной модели.
-  \item Ответ разбирается как JSON и преобразуется в типизированные модели.
-  \item При ошибке JSON-разбора в контекст добавляется описание ошибки.
-  \item Если модель не проходит доменные валидаторы, в контекст добавляется форматированное описание нарушенных правил.
-  \item LLM получает следующую попытку с учётом ошибки и исправляет ответ.
-\end{enumerate}
-
-\vspace{0.2cm}
-\textbf{Число попыток ограничено настройкой.} Если лимит исчерпан,
-генерация завершается ошибкой, а не запускается бесконечно.
-
-\end{frame}
-
-% --------------------------------------------------
-\begin{frame}{Модель архитектуры C4}
-
-\begin{columns}[T,onlytextwidth]
-  \column{0.30\textwidth}
-  \textbf{Типы узлов}
-  \begin{itemize}
-    \item Клиент
-    \item Балансировщик нагрузки
-    \item Вычислительный узел
-    \item База данных
-    \item Кэш
-    \item Брокер сообщений
-  \end{itemize}
-
-  \column{0.67\textwidth}
-  \textbf{Параметры узла}
-
-  \textbf{Фиксированные}
-  \begin{itemize}
-    \item Характеристики и стоимость узлов Amazon EC2 по открытым источникам
-    \item Каталог можно расширять конфигурациями других провайдеров и собственными узлами
-  \end{itemize}
-
-  \textbf{Определяемые LLM}
-  \begin{itemize}
-    \item Число реплик
-    \item Параллелизм
-    \item Время обработки
-    \item Размер очереди
-  \end{itemize}
-\end{columns}
-
-\vspace{0.10cm}
-\textcolor{Muted}{Профиль нагрузки (RPS) задаётся во входных данных.}
-
-\vfill
-% \includegraphics[width=0.8\textwidth]{images/c4.png}
-
-\end{frame}
-
-% --------------------------------------------------
-\begin{frame}{Онтология связей между узлами}
-
-\begin{columns}[T,onlytextwidth]
-  \column{0.48\textwidth}
-  {\color{Accent}\textbf{Пример разрешённых связей}}
-  \begin{itemize}
-    \item Клиент $\rightarrow$ вычислительный узел
-    \item Вычислительный узел $\rightarrow$ база данных
-  \end{itemize}
-
-  \column{0.48\textwidth}
-  {\color{Muted}\textcolor{red}{\textbf{Пример недопустимых связей}}}
-  \begin{itemize}
-    \item Клиент $\rightarrow$ база данных
-    \item База данных $\rightarrow$ вычислительный узел
-  \end{itemize}
-\end{columns}
-
-\vfill
-\textcolor{Muted}{Онтология задаёт допустимые пары типов узлов;
-проверка выполняется до построения диаграммы.}
-
-\end{frame}
-
-% --------------------------------------------------
-% --------------------------------------------------
-\begin{frame}{Протоколы взаимодействия между узлами}
-
-\begin{itemize}
-  \item LLM выбирает протокол для каждой связи в графе: HTTP (REST), gRPC, TCP или Message Queue.
-  \item Выбор сохраняется в модели архитектуры и отражает способ обмена данными между узлами.
-  \item Расчётные валидаторы учитывают протокол при оценке задержек и характеристик взаимодействия.
-  \item При генерации диаграммы последовательностей протокол также определяет способ представления обмена сообщениями.
-\end{itemize}
-
-\vspace{0.15cm}
-\textbf{Планируется добавить:} Webhooks, Long Polling, Server-Sent Events (SSE).
-
-\end{frame}
-
-% --------------------------------------------------
-\begin{frame}{Реализованные валидаторы диаграммы компонентов}
-
-\textbf{Структура графа}
-\begin{itemize}
-  \item У каждого узла уникальный идентификатор.
-  \item Каждая связь соответствует разрешённой паре типов узлов.
-  \item Граф не содержит циклов.
-  \item Каждый узел связан хотя бы с одним другим узлом.
-\end{itemize}
-
-\end{frame}
-
-% --------------------------------------------------
-\begin{frame}{Реализованные валидаторы диаграммы компонентов}
-
-\textbf{Валидация семантики}
-\begin{itemize}
-  \item Брокер сообщений должен быть связан с узлом-производителем и узлом-потребителем сообщений.
-  \item При использовании кэша должен быть определён путь обращения к основному хранилищу при промахе кэша.
-\end{itemize}
-
-\textbf{Валидация на основе расчётов}
-\begin{itemize}
-  \item Рассчитывается загрузка вычислительных узлов с учётом RPS, числа реплик и параллелизма.
-  \item Оцениваются теоретическая задержка обработки и соблюдение заданного бюджета задержки.
-\end{itemize}
-
-\end{frame}
-
-% --------------------------------------------------
-\begin{frame}{Планируемые валидаторы диаграммы компонентов}
-
-\textbf{Планируемые направления}
-\begin{itemize}
-  \item Симуляция нагрузки с помощью SimPy.
-  \item Модели на основе теории массового обслуживания.
-  \item Анализ очередей, задержек и насыщения под нагрузкой.
-\end{itemize}
-
-\vspace{0.4cm}
-\textcolor{Muted}{Цель: дополнить статические проверки оценкой
-поведения модели при заданном профиле нагрузки.}
-
-\end{frame}
-
-% --------------------------------------------------
-\begin{frame}{Реализованные валидаторы диаграммы последовательностей}
-
-\textbf{Текущие правила}
-\begin{itemize}
-  \item На каждое функциональное требование — отдельная диаграмма.
-  \item Ссылки на существующие роли и узлы C4.
-  \item Соответствие сценария исходному требованию.
-  \item Использование всех объявленных линий жизни.
-  \item Разные бизнес-роли не используют один клиентский компонент.
-  \item События и уведомления должны быть асинхронными.
-\end{itemize}
-
-\vspace{0.25cm}
-\textbf{Дальнейшее развитие}
-
-Расширение проверок семантики сообщений и ветвлений сценария.
-
-\vfill
-% \includegraphics[width=0.8\textwidth]{images/sequence.png}
-
-\end{frame}
-
-% --------------------------------------------------
-\begin{frame}{REST API: OpenAPI и Swagger}
-
-\begin{columns}[T,onlytextwidth]
-  \column{0.48\textwidth}
-  \textbf{OpenAPI 3.1}
-  \begin{itemize}
-    \item Операции и маршруты
-    \item Параметры и схемы
-    \item Связь с требованиями и узлами C4
-  \end{itemize}
-
-  \column{0.48\textwidth}
-  \textbf{Проверки}
-  \begin{itemize}
-    \item Уникальность операций
-    \item Коллизии маршрутов
-    \item Согласованность ссылок
-  \end{itemize}
-\end{columns}
-
-\end{frame}
-
-% --------------------------------------------------
-
-
-
-% --------------------------------------------------
-% --------------------------------------------------
-\begin{frame}{Интерфейс и способы запуска}
-
-\textbf{Текущая реализация}
-\begin{itemize}
-  \item Консольный интерфейс для запуска сценариев генерации и извлечения требований из текстовых документов; параметры генерации настраиваются.
-\end{itemize}
-
-\vspace{0.2cm}
-\textbf{Возможные направления развития}
-\begin{itemize}
-  \item Добавить FastAPI, чтобы запускать инструмент как сервер и предоставлять его функции через API.
-  \item Разработать отдельный фронтенд для настройки сценариев и просмотра результатов.
-\end{itemize}
-
-\end{frame}
-
-% --------------------------------------------------
-% Слайды для изображений, которые будут добавлены вручную.
-\newcommand{\diagramplaceholder}[3]{%
-  \begin{frame}{#1}
-    \centering
-    \IfFileExists{images/#2}{%
-      \includegraphics[width=0.92\textwidth,height=0.72\textheight,keepaspectratio]{images/#2}%
-    }{%
-      \fbox{\parbox[c][0.55\textheight][c]{0.86\textwidth}{\centering
-        \textcolor{Muted}{Изображение будет добавлено вручную}\par\vspace{0.25cm}
-        \texttt{\detokenize{images/#2}}\par\vspace{0.2cm}
-        \textcolor{Muted}{#3}
-      }}%
-    }%
-  \end{frame}
-}
-
-% --------------------------------------------------
-\diagramplaceholder{Пример входного YAML}{input_yaml.png}{Место для изображения YAML-сценария}
-
-\begin{frame}{Примеры C4-диаграмм}
+% 3. Конкретный пример входа. Формат файла не важен для аудитории.
+\begin{frame}{Пример BRD: оформление заказа}
+  {\small\color{Muted}Фрагмент бизнес-требований интернет-магазина}
+  \vspace{0.20cm}
   \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.49\textwidth}
-      \centering
-      \textbf{Пример C4-диаграммы 1}\par\vspace{0.15cm}
-      \includegraphics[width=\linewidth,height=0.65\textheight,keepaspectratio]{images/c4_example_1.png}
-    \end{column}
-    \begin{column}{0.49\textwidth}
-      \centering
-      \textbf{Пример C4-диаграммы 2}\par\vspace{0.15cm}
-      \includegraphics[width=\linewidth,height=0.65\textheight,keepaspectratio]{images/c4_example_2.png}
-    \end{column}
+    \column{0.54\textwidth}
+      \fcolorbox{Line}{Panel}{\parbox[c][4.0cm][c]{0.91\linewidth}{%
+        \textbf{Что должна делать система}\par\vspace{0.16cm}
+        \begin{itemize}
+          \setlength{\itemsep}{0.12cm}
+          \item Покупатель оформляет заказ.
+          \item Система проверяет наличие товаров и рассчитывает стоимость.
+          \item После оплаты отправляет подтверждение.
+          \item Покупатель видит статус заказа.
+        \end{itemize}
+      }}
+    \column{0.43\textwidth}
+      \fcolorbox{Line}{Panel}{\parbox[c][4.0cm][c]{0.88\linewidth}{%
+        \textbf{Условия работы}\par\vspace{0.16cm}
+        \begin{itemize}
+          \setlength{\itemsep}{0.16cm}
+          \item 120 запросов/с обычно
+          \item До 400 запросов/с на распродаже
+          \item Цель: 300 мс для p95
+          \item Доступность: 99,9\%
+        \end{itemize}
+      }}
+  \end{columns}
+  \vfill
+  {\small\color{Muted}Это требования заказчика, а не заранее готовая схема сервисов.}
+\end{frame}
+
+% 4. Короткая схема обработки документа.
+\begin{frame}{Как обрабатывается BRD}
+  \vspace{0.85cm}
+  \begin{columns}[c,onlytextwidth]
+    \column{0.21\textwidth}
+      \shortpanel{BRD}{Исходный документ}
+    \column{0.05\textwidth}
+      \centering{\color{Accent}\Large$\rightarrow$}
+    \column{0.21\textwidth}
+      \shortpanel{Извлечение}{Требования с цитатами}
+    \column{0.05\textwidth}
+      \centering{\color{Accent}\Large$\rightarrow$}
+    \column{0.21\textwidth}
+      \shortpanel{Проверка}{Цитаты и правила модели}
+    \column{0.05\textwidth}
+      \centering{\color{Accent}\Large$\rightarrow$}
+    \column{0.21\textwidth}
+      \shortpanel{Генерация}{Схемы, API, отчёт}
+  \end{columns}
+  \vspace{0.80cm}
+  \centering
+  \textbf{Неподтверждённые значения не принимаются как факты из BRD.}
+\end{frame}
+
+% 5-7. Вместо длинных перечислений показываем существующие артефакты проекта.
+% Это примеры артефактов проекта, а не утверждение о запуске именно показанного BRD.
+\begin{frame}{Результат: архитектура компонентов}
+  \centering
+  {\small\color{Muted}C4: компоненты системы и связи между ними\par}
+  \vspace{0.18cm}
+  \includegraphics[width=0.97\textwidth,height=0.72\textheight,keepaspectratio]{images/c4_example_1.png}
+\end{frame}
+
+\begin{frame}{Результат: сценарии взаимодействия}
+  \centering
+  {\small\color{Muted}Диаграмма последовательностей для функционального требования\par}
+  \vspace{0.18cm}
+  \includegraphics[width=0.97\textwidth,height=0.72\textheight,keepaspectratio]{images/sequence_example_1.png}
+\end{frame}
+
+\begin{frame}{Результат: контракт REST API}
+  \centering
+  {\small\color{Muted}OpenAPI 3.1 и интерактивное представление в Swagger UI\par}
+  \vspace{0.18cm}
+  \includegraphics[width=0.97\textwidth,height=0.72\textheight,keepaspectratio]{images/swagger_ui.png}
+\end{frame}
+
+% 8. В основной ветке уже реализована отдельная стадия анализа производительности.
+\begin{frame}{Результат: оценка нагрузки}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+      {\large\bfseries Что оценивается}\par\vspace{0.20cm}
+      \begin{itemize}
+        \setlength{\itemsep}{0.24cm}
+        \item Поток запросов через компоненты
+        \item Пропускная способность и загрузка
+        \item Средние задержки и параметры очередей
+      \end{itemize}
+    \column{0.48\textwidth}
+      \fcolorbox{Line}{Panel}{\parbox[c][3.8cm][c]{0.9\linewidth}{%
+        {\large\bfseries Отчёт по архитектуре}\par\vspace{0.30cm}
+        \textbf{JSON} с расчётными показателями\par\vspace{0.26cm}
+        \textbf{PDF} для просмотра и обсуждения\par\vspace{0.32cm}
+        {\footnotesize\color{Muted}Расчёты выполняются по заданным параметрам модели.}
+      }}
   \end{columns}
 \end{frame}
-\diagramplaceholder{Пример диаграммы последовательностей 1}{sequence_example_1.png}{Место для изображения sequence}
-\diagramplaceholder{Пример диаграммы последовательностей 2}{sequence_example_2.png}{Место для изображения sequence}
-\diagramplaceholder{Пример диаграммы последовательностей 3}{sequence_example_3.png}{Место для изображения sequence}
-\diagramplaceholder{Пример диаграммы последовательностей 4}{sequence_example_4.png}{Место для изображения sequence}
-\diagramplaceholder{Пример спецификации Swagger}{swagger_ui.png}{Место для изображения Swagger UI}
-\diagramplaceholder{Пример спецификации Swagger 2}{swagger_example_2.png}{Место для изображения Swagger UI}
-\diagramplaceholder{Пример спецификации Swagger 3}{swagger_example_3.png}{Место для изображения Swagger UI}
+
+% 9. Только основные понятные аудитории механизмы контроля.
+\begin{frame}{Контроль качества результата}
+  \vspace{0.52cm}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.32\textwidth}
+      \shortpanel{Требования}{Связь с цитатами из BRD}
+    \column{0.32\textwidth}
+      \shortpanel{Архитектура}{Проверка узлов, связей и сценариев}
+    \column{0.32\textwidth}
+      \shortpanel{Генерация}{Повторная попытка при нарушении правил}
+  \end{columns}
+  \vspace{0.90cm}
+  \centering
+  {\large\bfseries Результат проверяется программно, а не только самой LLM.}
+\end{frame}
+
+% 10. Чётко отделяем реализованный инструмент от планов.
+\begin{frame}{Текущий результат и развитие}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.53\textwidth}
+      {\large\bfseries Уже реализовано}\par\vspace{0.20cm}
+      \begin{itemize}
+        \setlength{\itemsep}{0.21cm}
+        \item Извлечение и проверка требований из BRD
+        \item Генерация C4, диаграмм последовательностей и OpenAPI
+        \item Отчёт об анализе производительности
+        \item Запуск через консоль
+      \end{itemize}
+    \column{0.43\textwidth}
+      {\large\bfseries Следующий шаг}\par\vspace{0.20cm}
+      \fcolorbox{Line}{Panel}{\parbox[c][2.75cm][c]{0.89\linewidth}{%
+        \centering
+        {\large Удобный интерфейс}\par\vspace{0.20cm}
+        для передачи BRD и просмотра первой визуализации
+      }}
+  \end{columns}
+  \vfill
+  {\small\color{Muted}Это отправная точка для проектирования, не замена архитектурного ревью.}
+\end{frame}
 
 \end{document}
