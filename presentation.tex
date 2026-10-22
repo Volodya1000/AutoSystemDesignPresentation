@@ -78,10 +78,10 @@
         \setlength{\itemsep}{0.19cm}
         \item В BRD описаны функции и ограничения, а не компоненты.
         \item Архитектор вручную переводит требования в схемы.
-        \item Согласованность C4, сценариев и API приходится проверять.
+        \item Согласованность диаграмм компонентов, сценариев и API приходится проверять.
       \end{itemize}
     \column{0.47\textwidth}
-      {\large\bfseries Подход}\par\vspace{0.23cm}
+      {\large\bfseries Решение}\par\vspace{0.23cm}
       \begin{itemize}
         \setlength{\itemsep}{0.19cm}
         \item LLM предлагает структурированную модель.
@@ -89,10 +89,10 @@
         \item Из одной модели строятся связанные артефакты.
       \end{itemize}
   \end{columns}
-  \statusline{Это первая архитектурная гипотеза для ревью, а не автоматическое утверждение проекта.}
+  \statusline{Система помогает визуализировать архитектурные гипотезы для ревью и дальнейшего обсуждения.}
 \end{frame}
 
-\begin{frame}{Вход: один BRD заказчика}
+\begin{frame}{Вход: BRD с бизнес-требованиями}
   \muted{Демонстрационный фрагмент BRD интернет-магазина}
   \vspace{0.18cm}
   \begin{columns}[T,onlytextwidth]
@@ -123,7 +123,7 @@
 \end{frame}
 
 \begin{frame}{Результат извлечения: требования}
-  \muted{Наглядный пример структурирования BRD; это не лог конкретного запуска LLM}
+  \muted{Наглядный пример структурирования BRD}
   \vspace{0.14cm}
   \begin{columns}[T,onlytextwidth]
     \column{0.53\textwidth}
@@ -274,50 +274,28 @@
   \statusline{Иллюстрация из репозитория. Позже будет заменена результатом единого BRD-прогона.}
 \end{frame}
 
-\begin{frame}{Связи: протокол влияет на смысл графа}
-  \vspace{0.25cm}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.48\textwidth}
-      {\large\bfseries Контракт связи}\par\vspace{0.13cm}
-      \begin{itemize}
-        \setlength{\itemsep}{0.17cm}
-        \item HTTP, gRPC, TCP или очередь сообщений
-        \item Синхронный или асинхронный обмен
-        \item Альтернативный маршрут либо fan-out
-      \end{itemize}
-    \column{0.48\textwidth}
-      {\large\bfseries Почему это важно}\par\vspace{0.13cm}
-      \begin{itemize}
-        \setlength{\itemsep}{0.17cm}
-        \item Разные пути по-разному получают RPS.
-        \item Асинхронные ветви не добавляются к задержке клиентского ответа.
-        \item Очередь и кэш меняют путь обработки.
-      \end{itemize}
-  \end{columns}
-  \statusline{Это модель обмена и распределения трафика, а не просто подписи на стрелках.}
-\end{frame}
 
-\begin{frame}{Sequence: от функционального требования к сценарию}
+
+\begin{frame}{Диаграмма Sequence: от требования к сценарию}
   \vspace{0.22cm}
   \begin{columns}[T,onlytextwidth]
     \column{0.49\textwidth}
       {\large\bfseries Построение}\par\vspace{0.12cm}
       \begin{itemize}
         \setlength{\itemsep}{0.18cm}
-        \item Каталог бизнес-ролей.
         \item Сценарий взаимодействия на каждое функциональное требование.
-        \item Участники ссылаются на компоненты C4.
+        \item Участники ссылаются на компоненты диаграммы компонентов.
       \end{itemize}
     \column{0.47\textwidth}
       {\large\bfseries Проверка}\par\vspace{0.12cm}
       \begin{itemize}
         \setlength{\itemsep}{0.18cm}
-        \item Существующие участники и связи.
-        \item Согласованность ролей и клиента.
-        \item Асинхронность уведомлений и событий.
+        \item Все участники есть в модели компонентов.
+        \item Сообщения идут по существующим связям между компонентами.
+        \item Клиент не обращается к базе данных напрямую.
       \end{itemize}
   \end{columns}
-  \statusline{Последовательность объясняет поведение архитектуры, которое не видно на статической C4.}
+  \statusline{Последовательность объясняет поведение архитектуры, которое не видно на статической диаграмме компонентов.}
 \end{frame}
 
 \begin{frame}{Пример: диаграмма последовательностей}
@@ -326,27 +304,36 @@
   \statusline{Иллюстрация из репозитория; связь с выбранным BRD ещё будет проверена на едином прогоне.}
 \end{frame}
 
-\begin{frame}{REST API: контракт строится после C4 и Sequence}
-  \vspace{0.25cm}
+\begin{frame}[fragile]{REST API: контракт и пример OpenAPI JSON}
+  \vspace{0.18cm}
   \begin{columns}[T,onlytextwidth]
-    \column{0.49\textwidth}
-      {\large\bfseries Что генерируется}\par\vspace{0.13cm}
+    \column{0.41\textwidth}
+      {\large\bfseries Что получаем}\par\vspace{0.13cm}
       \begin{itemize}
-        \setlength{\itemsep}{0.18cm}
-        \item Операции, методы и маршруты
-        \item Параметры, запросы и ответы
-        \item Связь операций с требованиями и компонентами
+        \setlength{\itemsep}{0.23cm}
+        \item Методы и маршруты по сценариям.
+        \item Структуры запросов и ответов.
+        \item Проверка уникальности операций и отсутствия конфликтующих маршрутов.
       \end{itemize}
-    \column{0.47\textwidth}
-      {\large\bfseries Что проверяется}\par\vspace{0.13cm}
-      \begin{itemize}
-        \setlength{\itemsep}{0.18cm}
-        \item Уникальность операций
-        \item Отсутствие коллизий маршрутов
-        \item Согласованность ссылок и схем
-      \end{itemize}
+    \column{0.55\textwidth}
+      {\small\bfseries Фрагмент OpenAPI JSON}\par\vspace{0.10cm}
+      \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+{
+  "openapi": "3.1.0",
+  "paths": {
+    "/orders": {
+      "post": {
+        "operationId": "createOrder",
+        "responses": {
+          "201": {"description": "Created"},
+          "409": {"description": "Out of stock"}
+        }
+      }
+    }
+  }
+}
+      \end{lstlisting}
   \end{columns}
-  \statusline{OpenAPI описывает машинный контракт. Swagger UI делает его удобным для просмотра людьми.}
 \end{frame}
 
 \begin{frame}{Пример: Swagger UI}
@@ -355,31 +342,7 @@
   \statusline{Существующий скриншот. Для финальной демонстрации нужен Swagger от того же BRD.}
 \end{frame}
 
-\begin{frame}[fragile]{Пример: фрагмент OpenAPI JSON}
-  \muted{Сокращённый иллюстративный контракт для оформления заказа, не фактический файл генерации}
-  \vspace{0.12cm}
-  \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
-{
-  "openapi": "3.1.0",
-  "info": {
-    "title": "Checkout API",
-    "version": "1.0.0"
-  },
-  "paths": {
-    "/orders": {
-      "post": {
-        "operationId": "createOrder",
-        "summary": "Create a customer order",
-        "responses": {
-          "201": { "description": "Order created" },
-          "409": { "description": "Item out of stock" }
-        }
-      }
-    }
-  }
-}
-  \end{lstlisting}
-\end{frame}
+
 
 \begin{frame}{Анализ производительности: что считаем}
   \vspace{0.30cm}
@@ -396,7 +359,7 @@
       {\large\bfseries Условия применимости}\par\vspace{0.16cm}
       \begin{itemize}
         \setlength{\itemsep}{0.17cm}
-        \item M/M/1, M/M/c и G/G/c: модели с допущениями.
+        \item Валидация на основе теории массового обслуживания.
         \item Число обслуживающих каналов не равно автоматически лимиту параллелизма.
         \item Неизвестная величина остаётся неизвестной.
       \end{itemize}
@@ -408,15 +371,30 @@
   \begin{columns}[c,onlytextwidth]
     \column{0.71\textwidth}
       \centering
-      \IfFileExists{images/performance_report_checkout.png}{%
-        \includegraphics[width=\linewidth,height=0.72\textheight,keepaspectratio]{images/performance_report_checkout.png}%
-      }{%
-        \fcolorbox{Line}{Panel}{\parbox[c][4.0cm][c]{0.94\linewidth}{%
-          \centering\textbf{checkout\_baseline}\par\vspace{0.25cm}
-          Скриншот PDF-отчёта\par\vspace{0.20cm}
-          32,10 мс: оценка средней задержки пути
-        }}%
-      }
+      % Векторная версия фрагмента предоставленного PDF, без зернистого изображения.
+      \fcolorbox{Line}{white}{\parbox[c][4.45cm][c]{0.96\linewidth}{%
+        \vspace{0.10cm}
+        {\small\bfseries Анализ производительности}\par
+        {\scriptsize Сценарий: checkout\_baseline}\par\vspace{0.23cm}
+        {\scriptsize\bfseries Синхронный путь с наибольшей задержкой}\par\vspace{0.08cm}
+        {\scriptsize Максимальная оценка средней задержки пути: 32.10 мс}\par
+        {\scriptsize Критический путь: client $\rightarrow$ checkout\_api $\rightarrow$ payment\_service}\par\vspace{0.22cm}
+        {\scriptsize\bfseries Показатели компонентов}\par\vspace{0.09cm}
+        \resizebox{\linewidth}{!}{%
+          \begin{tabular}{lrrrrr}
+            \hline
+            Компонент & Нагрузка & Пропускная & Загрузка & Ожидание & Ответ \\
+                      & запр./с & запр./с & \% & мс & мс \\
+            \hline
+            checkout\_api & 60.00 & 500.00 & 12.0 & 0.02 & 8.02 \\
+            inventory\_db & 60.00 & 333.33 & 18.0 & 0.09 & 12.09 \\
+            payment\_service & 60.00 & 150.00 & 40.0 & 2.08 & 22.08 \\
+            \hline
+          \end{tabular}%
+        }\par\vspace{0.18cm}
+        {\tiny\color{Muted}Показатели рассчитаны по параметрам сценария, а не измерены на работающей системе.}
+        \vspace{0.08cm}
+      }}
     \column{0.25\textwidth}
       {\bfseries\large Пример}\par\vspace{0.18cm}
       {\small
@@ -426,76 +404,20 @@
       максимальная оценка средней задержки пути\par
       }
   \end{columns}
-  \statusline{Реальный отчёт checkout\_baseline из предоставленного PDF; исходный BRD демонстрационного примера отличается.}
+  \statusline{Реальный отчёт checkout\_baseline; исходный BRD демонстрационного примера отличается.}
 \end{frame}
 
-\begin{frame}{Почему среднее время не доказывает p95}
-  \vspace{0.35cm}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.47\textwidth}
-      {\large\bfseries В отчёте есть}\par\vspace{0.22cm}
-      \begin{itemize}
-        \setlength{\itemsep}{0.19cm}
-        \item Средняя оценка ответа и ожидания.
-        \item Загрузка и пропускная способность.
-        \item Синхронный путь с наибольшей суммой средних задержек.
-      \end{itemize}
-    \column{0.47\textwidth}
-      {\large\bfseries Отчёт не доказывает}\par\vspace{0.22cm}
-      \begin{itemize}
-        \setlength{\itemsep}{0.19cm}
-        \item Соблюдение p95 или p99 по одному среднему.
-        \item Поведение на реальной инфраструктуре.
-        \item Потери при ограниченных очередях без модели.
-      \end{itemize}
-  \end{columns}
-  \vspace{0.38cm}
-  \fcolorbox{Line}{Panel}{\parbox{0.96\linewidth}{%
-    {\small\textbf{Пример:} среднее 32,10 мс не означает, что p95 не превысит 300 мс.}%
-  }}
-\end{frame}
 
-\begin{frame}{Разделение ответственности внутри системы}
-  \vspace{0.20cm}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.31\textwidth}
-      \smallpanel{Domain}{Типизированные модели, инварианты, расчёты}
-    \column{0.31\textwidth}
-      \smallpanel{Application}{Сервисы и стадии конвейера}
-    \column{0.31\textwidth}
-      \smallpanel{Infrastructure}{LLM, PlantUML, Swagger, PDF}
-  \end{columns}
-  \vspace{0.58cm}
+
+
+
+\begin{frame}{Следующие задачи}
+  \vspace{0.60cm}
   \begin{itemize}
-    \setlength{\itemsep}{0.19cm}
-    \item Замена модели LLM не должна переписывать доменные правила.
-    \item Исходники PlantUML, граф и артефакты API хранятся отдельно.
-    \item Рендеринг диаграмм поддерживает PlantUML и Kroki.
+    \setlength{\itemsep}{0.48cm}
+    \item Удобный интерфейс загрузки BRD и просмотра результатов.
+    \item Проверка расчётных оценок с помощью SimPy: дискретно-событийное моделирование очередей и сравнение с результатами теории массового обслуживания.
   \end{itemize}
-  \statusline{Результат описывается моделью, а не зависит от конкретного формата изображения.}
-\end{frame}
-
-\begin{frame}{Текущие возможности и границы}
-  \vspace{0.18cm}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.49\textwidth}
-      {\large\bfseries Реализовано}\par\vspace{0.12cm}
-      \begin{itemize}
-        \setlength{\itemsep}{0.18cm}
-        \item Извлечение требований из BRD с цитатами и проверками.
-        \item C4, Sequence, OpenAPI и Swagger.
-        \item Расчётный JSON-отчёт и PDF-представление.
-        \item Консольный запуск конвейера.
-      \end{itemize}
-    \column{0.47\textwidth}
-      {\large\bfseries Следующие задачи}\par\vspace{0.12cm}
-      \begin{itemize}
-        \setlength{\itemsep}{0.18cm}
-        \item Один воспроизводимый BRD-прогон для всех демонстрационных артефактов.
-        \item Удобный интерфейс загрузки BRD и просмотра результатов.
-        \item Развитие проверок и независимая оценка точности.
-      \end{itemize}
-  \end{columns}
   \statusline{Автоматическая генерация — начало проектирования. Окончательное решение остаётся за архитектором.}
 \end{frame}
 \end{document}
