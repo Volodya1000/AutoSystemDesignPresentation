@@ -148,7 +148,7 @@
   \fcolorbox{Line}{Panel}{\parbox{0.96\linewidth}{%
     {\footnotesize\textbf{След происхождения:} для каждого значения сохраняется цитата BRD; конфликтующие формулировки фиксируются отдельно.}%
   }}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Извлечение не означает безусловного доверия LLM}
   \vspace{0.34cm}
@@ -172,7 +172,7 @@
       \end{itemize}
   \end{columns}
   \statusline{Пример неоднозначности BRD: доставка письма за 10 секунд или до 2 минут в пике? Решение нужно уточнить.}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Архитектура конвейера и зависимости этапов}
   \vspace{0.42cm}
@@ -193,7 +193,7 @@
   {\color{Accent}\Large$\downarrow$}\par
   \fcolorbox{Line}{Panel}{\parbox[c][0.70cm][c]{0.48\textwidth}{\centering\textbf{API: OpenAPI + Swagger UI}}}
   \statusline{Performance зависит от C4; API опирается на C4 и Sequence.}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Как LLM превращается в проверяемый генератор}
   \begin{columns}[T,onlytextwidth]
@@ -216,7 +216,7 @@
       \end{itemize}
   \end{columns}
   \statusline{Принцип: генеративная модель предлагает, детерминированные валидаторы принимают или отклоняют.}
-\end{frame>
+\end{frame}
 
 \begin{frame}{C4: не картинка, а модель предметной области}
   \vspace{0.23cm}
@@ -244,7 +244,7 @@
   \fcolorbox{Line}{Panel}{\parbox{0.96\linewidth}{%
     {\footnotesize\textbf{Зачем:} одна и та же модель нужна и для рисования диаграммы, и для расчёта нагрузки и правил валидации.}%
   }}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Валидаторы C4: три уровня проверки}
   \vspace{0.25cm}
@@ -266,13 +266,13 @@
       Клиент $\rightarrow$ БД напрямую
   \end{columns}
   \statusline{Онтология допустимых связей ограничивает пространство решений, которые может предложить LLM.}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Пример: диаграмма компонентов C4}
   \centering
   \includegraphics[width=0.99\textwidth,height=0.79\textheight,keepaspectratio]{images/c4_example_2.png}
   \statusline{Иллюстрация из репозитория. Позже будет заменена результатом единого BRD-прогона.}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Связи: протокол влияет на смысл графа}
   \vspace{0.25cm}
@@ -295,7 +295,7 @@
       \end{itemize}
   \end{columns}
   \statusline{Это модель обмена и распределения трафика, а не просто подписи на стрелках.}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Sequence: от функционального требования к сценарию}
   \vspace{0.22cm}
@@ -318,13 +318,13 @@
       \end{itemize}
   \end{columns}
   \statusline{Последовательность объясняет поведение архитектуры, которое не видно на статической C4.}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Пример: диаграмма последовательностей}
   \centering
   \includegraphics[width=0.99\textwidth,height=0.79\textheight,keepaspectratio]{images/sequence_example_3.png}
   \statusline{Иллюстрация из репозитория; связь с выбранным BRD ещё будет проверена на едином прогоне.}
-\end{frame>
+\end{frame}
 
 \begin{frame}{REST API: контракт строится после C4 и Sequence}
   \vspace{0.25cm}
@@ -347,13 +347,13 @@
       \end{itemize}
   \end{columns}
   \statusline{OpenAPI описывает машинный контракт. Swagger UI делает его удобным для просмотра людьми.}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Пример: Swagger UI}
   \centering
   \includegraphics[width=0.99\textwidth,height=0.79\textheight,keepaspectratio]{images/swagger_example_2.png}
   \statusline{Существующий скриншот. Для финальной демонстрации нужен Swagger от того же BRD.}
-\end{frame>
+\end{frame}
 
 \begin{frame}[fragile]{Пример: фрагмент OpenAPI JSON}
   \muted{Сокращённый иллюстративный контракт для оформления заказа, не фактический файл генерации}
@@ -380,7 +380,7 @@
 }
   \end{lstlisting}
   \statusline{В реальной демонстрации этот слайд заменяется фрагментом сгенерированного документа.}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Анализ производительности: что считаем}
   \vspace{0.30cm}
@@ -403,7 +403,7 @@
       \end{itemize}
   \end{columns}
   \statusline{Это аналитическая оценка модели, не нагрузочный тест и не моделирование реального кластера.}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Пример: отчёт анализа производительности}
   \begin{columns}[c,onlytextwidth]
@@ -428,7 +428,7 @@
       }
   \end{columns}
   \statusline{Реальный отчёт checkout\_baseline из предоставленного PDF; исходный BRD демонстрационного примера отличается.}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Почему среднее время не доказывает p95}
   \vspace{0.35cm}
@@ -454,7 +454,7 @@
   \fcolorbox{Line}{Panel}{\parbox{0.96\linewidth}{%
     {\small\textbf{Пример:} среднее 32,10 мс не означает, что p95 не превысит 300 мс.}%
   }}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Разделение ответственности внутри системы}
   \vspace{0.20cm}
@@ -474,7 +474,7 @@
     \item Рендеринг диаграмм поддерживает PlantUML и Kroki.
   \end{itemize}
   \statusline{Результат описывается моделью, а не зависит от конкретного формата изображения.}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Текущие возможности и границы}
   \vspace{0.18cm}
@@ -498,5 +498,5 @@
       \end{itemize}
   \end{columns}
   \statusline{Автоматическая генерация — начало проектирования. Окончательное решение остаётся за архитектором.}
-\end{frame>
+\end{frame}
 \end{document}
