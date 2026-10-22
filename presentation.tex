@@ -95,8 +95,8 @@
 \end{frame}
 
 % 3. Конкретный пример входа. Формат файла не важен для аудитории.
-\begin{frame}{Пример BRD: обмен сообщениями}
-  {\small\color{Muted}Фрагмент бизнес-требований социальной сети}
+\begin{frame}{Пример BRD: оформление заказа}
+  {\small\color{Muted}Фрагмент бизнес-требований интернет-магазина}
   \vspace{0.20cm}
   \begin{columns}[T,onlytextwidth]
     \column{0.54\textwidth}
@@ -104,10 +104,10 @@
         \textbf{Что должна делать система}\par\vspace{0.16cm}
         \begin{itemize}
           \setlength{\itemsep}{0.12cm}
-          \item Пользователь отправляет сообщение.
-          \item Онлайн: сообщение доставляется сразу.
-          \item Офлайн: очередь и push-уведомление.
-          \item Отправитель видит статус прочтения.
+          \item Покупатель оформляет заказ.
+          \item Система проверяет наличие товаров.
+          \item После оплаты отправляет подтверждение.
+          \item Покупатель видит статус заказа.
         \end{itemize}
       }}
     \column{0.43\textwidth}
@@ -115,10 +115,10 @@
         \textbf{Условия работы}\par\vspace{0.16cm}
         \begin{itemize}
           \setlength{\itemsep}{0.16cm}
-          \item 500 запросов/с обычно
-          \item До 2500 запросов/с в пике
-          \item Цель: 150 мс для p99
-          \item Доступность: 99,99\%
+          \item 120 запросов/с обычно
+          \item До 400 запросов/с в пике
+          \item Цель: 300 мс для p95
+          \item Доступность: 99,9\%
         \end{itemize}
       }}
   \end{columns}
@@ -170,7 +170,7 @@
   \centering
   {\small\color{Muted}OpenAPI 3.1 и интерактивное представление в Swagger UI\par}
   \vspace{0.18cm}
-  \includegraphics[width=0.97\textwidth,height=0.72\textheight,keepaspectratio]{images/swagger_ui.png}
+  \includegraphics[width=0.97\textwidth,height=0.72\textheight,keepaspectratio]{images/swagger_example_2.png}
 \end{frame}
 
 % 8. В основной ветке уже реализована отдельная стадия анализа производительности.
