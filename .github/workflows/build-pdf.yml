@@ -14,36 +14,19 @@ jobs:
   build-pdf:
     name: Compile LaTeX presentation
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref || github.ref }}
 
-      - name: Cache TeX Live package archives
-        uses: actions/cache@v4
+      - name: Compile PDF with preinstalled TeX Live
+        uses: xu-cheng/latex-action@v4
         with:
-          path: /var/cache/apt/archives
-          key: texlive-apt-ubuntu-24.04-v1
-          restore-keys: |
-            texlive-apt-ubuntu-24.04-
-
-      - name: Install LuaLaTeX and required fonts
-        run: |
-          # Keep downloaded .deb files so actions/cache can save them.
-          sudo rm -f /etc/apt/apt.conf.d/docker-clean
-          sudo apt-get update
-          sudo apt-get install --no-install-recommends -y \
-            fonts-dejavu-core \
-            texlive-luatex \
-            texlive-latex-recommended \
-            texlive-latex-extra \
-            texlive-lang-cyrillic
-
-      - name: Compile PDF
-        run: |
-          lualatex -interaction=nonstopmode -halt-on-error -file-line-error presentation.tex
-          lualatex -interaction=nonstopmode -halt-on-error -file-line-error presentation.tex
+          root_file: presentation.tex
+          latexmk_use_lualatex: true
+          extra_system_packages: font-dejavu
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
