@@ -95,8 +95,8 @@
 \end{frame}
 
 % 3. Конкретный пример входа. Формат файла не важен для аудитории.
-\begin{frame}{Пример BRD: оформление заказа}
-  {\small\color{Muted}Фрагмент бизнес-требований интернет-магазина}
+\begin{frame}{Пример BRD: обмен сообщениями}
+  {\small\color{Muted}Фрагмент бизнес-требований социальной сети}
   \vspace{0.20cm}
   \begin{columns}[T,onlytextwidth]
     \column{0.54\textwidth}
@@ -104,10 +104,10 @@
         \textbf{Что должна делать система}\par\vspace{0.16cm}
         \begin{itemize}
           \setlength{\itemsep}{0.12cm}
-          \item Покупатель оформляет заказ.
-          \item Система проверяет наличие товаров и рассчитывает стоимость.
-          \item После оплаты отправляет подтверждение.
-          \item Покупатель видит статус заказа.
+          \item Пользователь отправляет сообщение.
+          \item Онлайн: сообщение доставляется сразу.
+          \item Офлайн: очередь и push-уведомление.
+          \item Отправитель видит статус прочтения.
         \end{itemize}
       }}
     \column{0.43\textwidth}
@@ -115,10 +115,10 @@
         \textbf{Условия работы}\par\vspace{0.16cm}
         \begin{itemize}
           \setlength{\itemsep}{0.16cm}
-          \item 120 запросов/с обычно
-          \item До 400 запросов/с на распродаже
-          \item Цель: 300 мс для p95
-          \item Доступность: 99,9\%
+          \item 500 запросов/с обычно
+          \item До 2500 запросов/с в пике
+          \item Цель: 150 мс для p99
+          \item Доступность: 99,99\%
         \end{itemize}
       }}
   \end{columns}
@@ -186,10 +186,10 @@
       \end{itemize}
     \column{0.48\textwidth}
       \fcolorbox{Line}{Panel}{\parbox[c][3.8cm][c]{0.9\linewidth}{%
-        {\large\bfseries Отчёт по архитектуре}\par\vspace{0.30cm}
-        \textbf{JSON} с расчётными показателями\par\vspace{0.26cm}
-        \textbf{PDF} для просмотра и обсуждения\par\vspace{0.32cm}
-        {\footnotesize\color{Muted}Расчёты выполняются по заданным параметрам модели.}
+        {\large\bfseries Отчёт}\par\vspace{0.30cm}
+        \textbf{JSON}: показатели\par\vspace{0.26cm}
+        \textbf{PDF}: наглядный отчёт\par\vspace{0.32cm}
+        {\footnotesize\color{Muted}Расчёты опираются на параметры модели.}
       }}
   \end{columns}
 \end{frame}
@@ -207,7 +207,7 @@
   \end{columns}
   \vspace{0.90cm}
   \centering
-  {\large\bfseries Результат проверяется программно, а не только самой LLM.}
+  {\large\bfseries Проверки встроены в код, а не доверены LLM.}
 \end{frame}
 
 % 10. Чётко отделяем реализованный инструмент от планов.
