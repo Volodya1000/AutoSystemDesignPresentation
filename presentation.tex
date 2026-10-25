@@ -18,34 +18,33 @@
 \definecolor{Muted}{HTML}{667085}
 \definecolor{Line}{HTML}{D9DEE7}
 \definecolor{Panel}{HTML}{F3F5F8}
-\definecolor{Warning}{HTML}{9A6700}
 
 \usetheme{default}
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{itemize subitem}[triangle]
 \setbeamercolor{normal text}{fg=Text,bg=white}
 \setbeamercolor{frametitle}{fg=Text,bg=white}
 \setbeamercolor{structure}{fg=Accent}
 \setbeamercolor{itemize item}{fg=Accent}
+\setbeamercolor{itemize subitem}{fg=Muted}
 \setbeamercolor{footline}{fg=Muted,bg=white}
-\setbeamersize{text margin left=0.78cm,text margin right=0.78cm}
+\setbeamersize{text margin left=0.8cm,text margin right=0.8cm}
 \setbeamerfont{frametitle}{size=\Large,series=\bfseries}
 \setbeamerfont{normal text}{size=\small}
 \setbeamertemplate{frametitle}{%
-  \vspace{0.18cm}\insertframetitle\par
-  \vspace{0.05cm}{\color{Accent}\rule{\textwidth}{0.65pt}}\vspace{0.06cm}%
+  \vspace{0.23cm}\insertframetitle\par
+  \vspace{0.07cm}{\color{Accent}\rule{\textwidth}{0.7pt}}\vspace{0.08cm}%
 }
 \setbeamertemplate{footline}{%
-  \hfill{\scriptsize\color{Muted}\insertframenumber/5\hspace{0.75cm}}\vspace{0.20cm}%
+  \hfill{\scriptsize\color{Muted}\insertframenumber/\inserttotalframenumber\hspace{0.8cm}}\vspace{0.25cm}%
 }
 \newcommand{\muted}[1]{{\color{Muted}\footnotesize #1}}
-\newcommand{\metric}[2]{%
-  \fcolorbox{Line}{Panel}{\parbox[c][0.92cm][c]{0.19\textwidth}{%
-    \centering{\normalsize\bfseries #1}\par{\tiny #2}}}%
+\newcommand{\stagebox}[2]{%
+  \fcolorbox{Line}{Panel}{\parbox[c][0.80cm][c]{0.18\textwidth}{\centering\textbf{#1}\par{\scriptsize #2}}}%
 }
-\newcommand{\tagbox}[2]{%
-  \fcolorbox{Line}{Panel}{\parbox[c][0.82cm][c]{0.37\textwidth}{%
-    \centering\textbf{#1}\quad{\scriptsize #2}}}%
+\newcommand{\flowbox}[1]{%
+  \fcolorbox{Line}{Panel}{\parbox[c][0.62cm][c]{0.78\textwidth}{\centering #1}}%
 }
 \lstset{
   basicstyle=\ttfamily\scriptsize,
@@ -59,131 +58,444 @@
   literate={_}{{\_}}1
 }
 
+\title[AutoSystemDesign]{Инструмент автоматизации проектирования архитектуры микросервисных систем (AutoSystemDesign)}
+\author[Дичковский]{Дичковский Владимир}
+\date{}
+
 \begin{document}
 
 \begin{frame}[plain]
-  \vspace{0.40cm}
-  {\color{Accent}\rule{0.12\textwidth}{2pt}\par}\vspace{0.28cm}
-  {\LARGE\bfseries AutoSystemDesign: BRD → связанные артефакты\par}\vspace{0.16cm}
-  {\large Один демонстрационный сценарий: регистрация и статус заказа\par}
-  \vspace{0.46cm}
+  \vfill
+  {\color{Accent}\rule{0.12\textwidth}{2pt}\par}\vspace{0.42cm}
+  {\LARGE\bfseries Инструмент автоматизации проектирования\par}\vspace{0.12cm}
+  {\Large\bfseries архитектуры микросервисных систем\par}\vspace{0.25cm}
+  {\large AutoSystemDesign\par}\vspace{0.8cm}
+  {\normalsize Дичковский Владимир\par}
+  \vfill
+\end{frame}
+
+\begin{frame}{Что делает AutoSystemDesign}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+      \textbf{Проектирование}
+      \begin{itemize}
+        \item извлекает функциональные и нефункциональные требования из BRD;
+        \item строит типизированную C4-модель компонентов;
+        \item формирует Sequence-диаграмму для каждого требования;
+        \item проектирует OpenAPI 3.1 и Swagger UI.
+      \end{itemize}
+    \column{0.48\textwidth}
+      \textbf{Проверка и анализ}
+      \begin{itemize}
+        \item проверяет граф, связи, протоколы и трассировку требований;
+        \item исправляет структурные ошибки через ограниченный repair loop;
+        \item оценивает загрузку, задержки и критический путь;
+        \item сохраняет редактируемые и машиночитаемые артефакты.
+      \end{itemize}
+  \end{columns}
+  \vfill
+  \muted{LLM предлагает модель; программные валидаторы определяют, можно ли передать её следующей стадии.}
+\end{frame}
+
+\begin{frame}{Единый пример: сервис заказов интернет-магазина}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.55\textwidth}
+      \textbf{Функциональные требования}
+      \begin{itemize}
+        \item \textbf{FR-001}: регистрация заказа по списку товаров с возвратом номера;
+        \item \textbf{FR-002}: получение текущего статуса заказа по номеру.
+      \end{itemize}
+      \vspace{0.20cm}
+      \textbf{Граница примера}
+      \begin{itemize}
+        \item оплата и управление складом не входят в систему;
+        \item один BRD используется на всех следующих слайдах.
+      \end{itemize}
+    \column{0.41\textwidth}
+      \textbf{Нагрузка и ограничения}
+      \begin{itemize}
+        \item 120 запросов/с обычно;
+        \item 400 запросов/с в пике;
+        \item 80\% чтений, 20\% записей;
+        \item p95 ответа API $\leq$ 300 мс;
+        \item бюджет $\leq$ 500 USD/месяц.
+      \end{itemize}
+  \end{columns}
+  \vfill
+  \muted{Источник: \texttt{examples/requirements/online\_store\_brd.md}.}
+\end{frame}
+
+\begin{frame}{Вход и результат одного запуска}
   \begin{center}
-    \begin{tikzpicture}[
-      node distance=0.42cm,
-      box/.style={draw=Line,fill=Panel,rounded corners=2pt,align=center,
-        minimum height=0.86cm,text width=2.55cm,font=\small},
-      arrow/.style={draw=Accent,thick,-{Stealth[length=2mm]}}
-    ]
+    \begin{tikzpicture}[node distance=0.45cm,
+      box/.style={draw=Line,fill=Panel,rounded corners=2pt,align=center,minimum height=1.0cm,text width=2.45cm},
+      arrow/.style={draw=Accent,thick,-{Stealth[length=2mm]}}]
       \node[box] (brd) {Markdown BRD};
-      \node[box,right=of brd] (model) {Требования\\+ evidence};
-      \node[box,right=of model] (design) {C4 + Sequence};
-      \node[box,right=of design] (contract) {OpenAPI + Swagger\\+ performance};
-      \draw[arrow] (brd) -- (model);
-      \draw[arrow] (model) -- (design);
-      \draw[arrow] (design) -- (contract);
+      \node[box,right=of brd] (req) {Сценарий требований\\+ evidence};
+      \node[box,right=of req] (arch) {C4 + performance\\+ Sequence};
+      \node[box,right=of arch] (api) {OpenAPI JSON\\+ Swagger HTML};
+      \draw[arrow] (brd) -- (req);
+      \draw[arrow] (req) -- (arch);
+      \draw[arrow] (arch) -- (api);
     \end{tikzpicture}
   \end{center}
-  \vspace{0.50cm}
-  \begin{center}
-    \metric{2 FR}{создание и статус заказа}\hspace{0.10cm}
-    \metric{2 NFR}{p95 300 мс; бюджет 500 USD}\hspace{0.10cm}
-    \metric{120 / 400}{RPS: обычная / пиковая}\hspace{0.10cm}
-    \metric{80\% чтений}{20\% записей}
-  \end{center}
-  \vfill
-  \muted{Все примеры далее получены из \texttt{examples/requirements/online\_store\_brd.md}.}
-\end{frame}
-
-\begin{frame}[fragile]{Одна команда и изолированный каталог результата}
-  \begin{lstlisting}[basicstyle=\ttfamily\fontsize{6.7}{7.8}\selectfont]
-uv run python scripts/generate_from_brd.py `
-  --document examples/requirements/online_store_brd.md --out-dir output/online_store_run `
-  --diagram-server http://localhost:8080 --diagram-format png
-  \end{lstlisting}
-  \vspace{0.06cm}
-  \begin{columns}[c,onlytextwidth]
-    \column{0.34\textwidth}
-      \centering
-      \includegraphics[height=3.25cm,keepaspectratio]{images/online_store_run_tree.png}
-    \column{0.63\textwidth}
-      \centering
-      \includegraphics[width=\linewidth,height=3.25cm,keepaspectratio,trim=0 0 0 165,clip]{images/online_store_powershell.png}
-  \end{columns}
-  \vspace{0.10cm}
-  \centering\small\textbf{4 стадии} · \textbf{16 артефактов} · \textbf{run.json} со статусами и warnings\par
-  \vspace{0.05cm}
-  \muted{\texttt{scenario.yaml} создаётся автоматически; вручную заполнять его не требуется.}
-\end{frame}
-
-\begin{frame}{Одна модель связывает C4 и поведение системы}
+  \vspace{0.35cm}
   \begin{columns}[T,onlytextwidth]
-    \column{0.35\textwidth}
-      \centering
-      {\small\bfseries Контейнеры и параметры}\par\vspace{0.08cm}
-      \includegraphics[height=4.72cm,keepaspectratio]{images/online_store_brd_c4.png}
-    \column{0.62\textwidth}
-      \centering
-      {\small\bfseries FR-001: регистрация заказа}\par\vspace{0.08cm}
-      \includegraphics[width=\linewidth,height=3.25cm,keepaspectratio]{images/online_store_brd_seq_fr_001.png}
-      \vspace{0.05cm}
-      \begin{itemize}\scriptsize
-        \setlength{\itemsep}{0.03cm}
-        \item участники Sequence должны существовать в C4-графе;
-        \item связи проходят проверку типов и топологии;
-        \item идентификатор \texttt{FR-001} сохраняется до API-контракта.
+    \column{0.48\textwidth}
+      \textbf{Основной пользовательский вход}
+      \begin{itemize}
+        \item обычный Markdown-документ BRD;
+        \item YAML-сценарий создаётся автоматически;
+        \item профили производительности необязательны.
+      \end{itemize}
+    \column{0.48\textwidth}
+      \textbf{Артефакты для разных задач}
+      \begin{itemize}
+        \item PNG/PDF/HTML — просмотр и обсуждение;
+        \item PlantUML — редактирование диаграмм;
+        \item JSON/YAML — интеграция и повторная обработка.
       \end{itemize}
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Контракт API сохраняет трассировку к требованиям}
+\begin{frame}[fragile]{Минимальный запуск из BRD}
+  \vspace{0.3cm}
+  \begin{lstlisting}[basicstyle=\ttfamily\small]
+uv run python scripts/generate_from_brd.py \
+  --document examples/requirements/online_store_brd.md
+  \end{lstlisting}
+  \vspace{0.35cm}
+  \begin{itemize}
+    \item результат создаётся в \texttt{output/online\_store\_brd/};
+    \item сервер и формат диаграмм берутся из конфигурации;
+    \item \texttt{--profiles} нужен только для явных измеренных параметров;
+    \item расширенные параметры CLI остаются доступны, но не нужны для первого запуска.
+  \end{itemize}
+  \vfill
+  \muted{Пользователю не требуется заранее заполнять технические JSON-файлы.}
+\end{frame}
+
+\begin{frame}{Как BRD превращается в сценарий}
+  \centering
+  \flowbox{\textbf{BRD}: требования, числа и ограничения}\\[0.05cm]
+  {\color{Accent}$\downarrow$}\\[0.05cm]
+  \flowbox{LLM выделяет FR, NFR и точные исходные цитаты}\\[0.05cm]
+  {\color{Accent}$\downarrow$}\\[0.05cm]
+  \flowbox{Программа сверяет цитаты с исходным документом}\\[0.05cm]
+  {\color{Accent}$\downarrow$}\\[0.05cm]
+  \flowbox{Проверенные значения сопоставляются с типизированной моделью сценария}\\[0.05cm]
+  {\color{Accent}$\downarrow$}\\[0.05cm]
+  \flowbox{\textbf{scenario.yaml + evidence.json} передаются в конвейер}
+\end{frame}
+
+\begin{frame}{Проверка происхождения требований}
   \begin{columns}[T,onlytextwidth]
-    \column{0.61\textwidth}
-      \centering
-      \includegraphics[width=\linewidth,height=4.70cm,keepaspectratio]{images/online_store_brd_swagger.png}
-    \column{0.36\textwidth}
-      {\small\bfseries Фрагмент сгенерированного OpenAPI 3.1}\par\vspace{0.10cm}
-      \begin{lstlisting}[basicstyle=\ttfamily\fontsize{5.7}{6.6}\selectfont]
+    \column{0.48\textwidth}
+      \textbf{Что сохраняется}
+      \begin{itemize}
+        \item идентификатор требования;
+        \item извлечённое значение;
+        \item цитата из BRD;
+        \item позиция и результат проверки.
+      \end{itemize}
+    \column{0.48\textwidth}
+      \textbf{Правила}
+      \begin{itemize}
+        \item цитата должна буквально присутствовать в документе;
+        \item числовое значение должно встречаться в подтверждающем фрагменте;
+        \item неоднозначности остаются в diagnostics для просмотра человеком.
+      \end{itemize}
+  \end{columns}
+  \vfill
+  \fcolorbox{Line}{Panel}{\parbox{0.94\textwidth}{\small
+    \textbf{Зачем это архитектору:} можно проследить, из какого места BRD возникли нагрузка, бюджет или функциональный сценарий, не перечитывая весь документ.}}
+\end{frame}
+
+\begin{frame}[fragile]{Каталог результата: 16 связанных артефактов}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+      \begin{lstlisting}[basicstyle=\ttfamily\fontsize{5.8}{6.7}\selectfont]
+output/online_store_brd/
+|-- requirements.yaml
+|-- requirements.evidence.json
+|-- run.json
+`-- artifacts/
+    |-- online_store_brd_c4.json
+    |-- online_store_brd_c4.puml
+    |-- online_store_brd_c4.png
+    |-- online_store_brd_nfr_coverage.json
+    |-- online_store_brd_performance_analysis.json
+    |-- online_store_brd_performance_analysis.pdf
+      \end{lstlisting}
+    \column{0.48\textwidth}
+      \begin{lstlisting}[basicstyle=\ttfamily\fontsize{5.8}{6.7}\selectfont]
+    |-- online_store_brd_roles.json
+    |-- online_store_brd_seq_fr_001_ast.json
+    |-- online_store_brd_seq_fr_001.puml
+    |-- online_store_brd_seq_fr_001.png
+    |-- online_store_brd_seq_fr_002_ast.json
+    |-- online_store_brd_seq_fr_002.puml
+    |-- online_store_brd_seq_fr_002.png
+    |-- online_store_brd_api_design.json
+    |-- online_store_brd_api_openapi.json
+    `-- online_store_brd_api_swagger.html
+      \end{lstlisting}
+  \end{columns}
+  \vfill
+  \muted{Имена артефактов привязаны к одному сценарию; \texttt{run.json} содержит итог и статусы стадий.}
+\end{frame}
+
+\begin{frame}{Архитектура конвейера генерации}
+  \begin{center}
+    \stagebox{C4}{граф и параметры}\hspace{0.18cm}$\rightarrow$\hspace{0.18cm}
+    \stagebox{Performance}{поток и задержки}\hspace{0.18cm}$\rightarrow$\hspace{0.18cm}
+    \stagebox{Sequence}{сценарии FR}\hspace{0.18cm}$\rightarrow$\hspace{0.18cm}
+    \stagebox{API}{OpenAPI 3.1}
+  \end{center}
+  \vspace{0.35cm}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+      \textbf{LLM отвечает за предложение}
+      \begin{itemize}
+        \item получает схему типизированной модели;
+        \item формирует структурированный JSON;
+        \item не пишет PlantUML напрямую.
+      \end{itemize}
+    \column{0.48\textwidth}
+      \textbf{Код отвечает за контракт}
+      \begin{itemize}
+        \item Pydantic разбирает результат;
+        \item доменные спецификации проверяют правила;
+        \item рендереры создают PlantUML, PNG, PDF и HTML.
+      \end{itemize}
+  \end{columns}
+  \vfill
+  \muted{Стадии связаны типизированным контекстом: последующие артефакты используют проверенные результаты предыдущих.}
+\end{frame}
+
+\begin{frame}{Repair loop: исправление структурного ответа}
+  \begin{enumerate}
+    \item LLM формирует JSON по схеме доменной модели.
+    \item Ответ разбирается и передаётся доменным валидаторам.
+    \item Ошибка JSON или нарушенное правило преобразуется в конкретную диагностику.
+    \item Диагностика добавляется в следующую попытку генерации.
+    \item После успешной проверки создаются артефакты; число попыток ограничено.
+  \end{enumerate}
+  \vspace{0.25cm}
+  \begin{center}
+    \begin{tikzpicture}[node distance=0.55cm,
+      box/.style={draw=Line,fill=Panel,rounded corners=2pt,align=center,minimum height=0.8cm,text width=2.4cm},
+      arrow/.style={draw=Accent,thick,-{Stealth[length=2mm]}}]
+      \node[box] (llm) {LLM JSON};
+      \node[box,right=of llm] (parse) {Pydantic};
+      \node[box,right=of parse] (valid) {Валидаторы};
+      \node[box,right=of valid] (out) {Артефакты};
+      \draw[arrow] (llm)--(parse); \draw[arrow] (parse)--(valid); \draw[arrow] (valid)--(out);
+      \draw[arrow] (valid.south) |- ++(0,-0.55) -| node[pos=.5,below,font=\scriptsize]{диагностика} (llm.south);
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Доменная модель C4}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.32\textwidth}
+      \textbf{Типы узлов}
+      \begin{itemize}
+        \item клиент;
+        \item балансировщик;
+        \item сервис;
+        \item база данных;
+        \item кэш;
+        \item брокер сообщений.
+      \end{itemize}
+    \column{0.31\textwidth}
+      \textbf{Параметры}
+      \begin{itemize}
+        \item реплики;
+        \item параллелизм;
+        \item каналы обслуживания;
+        \item время обработки;
+        \item стоимость.
+      \end{itemize}
+    \column{0.31\textwidth}
+      \textbf{Связи}
+      \begin{itemize}
+        \item REST/HTTP;
+        \item gRPC;
+        \item database TCP;
+        \item message queue;
+        \item вероятность и режим маршрутизации.
+      \end{itemize}
+  \end{columns}
+  \vfill
+  \muted{Эта модель одновременно служит источником для C4-диаграммы, расчёта производительности, Sequence и API.}
+\end{frame}
+
+\begin{frame}{Проверки C4 до построения диаграммы}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+      \textbf{Структура графа}
+      \begin{itemize}
+        \item уникальные идентификаторы узлов;
+        \item существующие концы каждой связи;
+        \item допустимая пара типов узлов;
+        \item отсутствие циклов и изолированных узлов.
+      \end{itemize}
+    \column{0.48\textwidth}
+      \textbf{Архитектурная семантика}
+      \begin{itemize}
+        \item кэш имеет путь к основному хранилищу;
+        \item брокер связан с producer и consumer;
+        \item протокол согласован с типами компонентов;
+        \item параметры достаточны для расчёта нагрузки.
+      \end{itemize}
+  \end{columns}
+  \vfill
+  \fcolorbox{Line}{Panel}{\parbox{0.94\textwidth}{\small
+    Онтология связей реализована в коде как набор спецификаций, а не как текстовая рекомендация для LLM.}}
+\end{frame}
+
+\begin{frame}{C4-модель, полученная из BRD}
+  \centering
+  \includegraphics[width=0.97\textwidth,height=5.35cm,keepaspectratio]{images/online_store_brd_c4_presentation.png}\par
+  \vspace{0.04cm}
+  \muted{Горизонтальное представление фактической C4-модели: параметры узлов сохранены, изменена только компоновка для слайда.}
+\end{frame}
+
+\begin{frame}{Sequence-диаграммы связаны с C4}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+      \textbf{Правила генерации}
+      \begin{itemize}
+        \item отдельный сценарий на каждое FR;
+        \item участники ссылаются на роли и узлы C4;
+        \item переходы должны существовать в архитектурном графе;
+        \item протокол влияет на вид сообщения;
+        \item ветвления описываются типизированными блоками.
+      \end{itemize}
+    \column{0.48\textwidth}
+      \textbf{Проверки}
+      \begin{itemize}
+        \item все объявленные линии жизни используются;
+        \item инициатор и бизнес-роль согласованы;
+        \item события и уведомления асинхронны;
+        \item идентификатор требования сохраняется для API.
+      \end{itemize}
+  \end{columns}
+  \vfill
+  \muted{Sequence не является независимой картинкой: она проверяется относительно уже принятой C4-модели.}
+\end{frame}
+
+\begin{frame}{FR-001: регистрация заказа}
+  \centering
+  \includegraphics[width=0.96\textwidth,height=5.35cm,keepaspectratio,trim=15 20 15 15,clip]{images/online_store_brd_seq_fr_001.png}\par
+  \vspace{0.05cm}
+  \muted{Путь запроса: покупатель → Web Client → Edge Load Balancer → Orders API → cache/database.}
+\end{frame}
+
+\begin{frame}{Проектирование API из требований и Sequence}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+      \textbf{На вход стадии API}
+      \begin{itemize}
+        \item FR-001 и FR-002;
+        \item проверенные Sequence-сценарии;
+        \item компоненты и точки входа C4.
+      \end{itemize}
+    \column{0.48\textwidth}
+      \textbf{На выходе}
+      \begin{itemize}
+        \item дизайн операций и схем в JSON;
+        \item спецификация OpenAPI 3.1;
+        \item автономная страница Swagger UI.
+      \end{itemize}
+  \end{columns}
+  \vspace{0.25cm}
+  \textbf{Дополнительные поля трассировки}
+  \begin{itemize}
+    \item \texttt{x-requirement-ids} — исходные функциональные требования;
+    \item \texttt{x-sequence-ids} — сценарии поведения;
+    \item \texttt{x-entrypoint-component} и \texttt{x-handler-component} — узлы C4.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Фрагмент фактического OpenAPI 3.1}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.49\textwidth}
+      \begin{lstlisting}[basicstyle=\ttfamily\fontsize{6.3}{7.2}\selectfont]
 "/orders": {
   "post": {
     "operationId": "create_order",
+    "x-entrypoint-component": "edge_lb",
     "x-handler-component": "orders_api",
     "x-requirement-ids": ["FR-001"],
     "x-sequence-ids": ["SC-FR-001"],
     "responses": {"201": {...}}
   }
-},
-"/order/status/{orderId}": {
-  "get": {
+}
+      \end{lstlisting}
+    \column{0.49\textwidth}
+      \begin{lstlisting}[basicstyle=\ttfamily\fontsize{6.3}{7.2}\selectfont]
+"/orders/status": {
+  "post": {
+    "operationId": "get_order_status",
+    "x-entrypoint-component": "edge_lb",
+    "x-handler-component": "orders_api",
     "x-requirement-ids": ["FR-002"],
+    "x-sequence-ids": ["SC-FR-002"],
     "responses": {"200": {...}}
   }
 }
       \end{lstlisting}
-      \vspace{0.04cm}
-      \tiny Проверяются маршруты, операции, схемы и ссылки на компоненты.
   \end{columns}
+  \vfill
+  \muted{Спецификация также содержит request/response schemas и ссылки \texttt{\$ref} на компоненты OpenAPI.}
 \end{frame}
 
-\begin{frame}{Что проверено — и где остаются допущения}
+\begin{frame}{Swagger UI из того же запуска}
+  \centering
+  \includegraphics[width=0.96\textwidth,height=5.25cm,keepaspectratio,trim=60 75 60 70,clip]{images/online_store_brd_swagger.png}\par
+  \vspace{0.05cm}
+  \muted{HTML открывается локально: операции \texttt{POST /orders} и \texttt{POST /orders/status}, а также четыре схемы данных.}
+\end{frame}
+
+\begin{frame}{Как рассчитывается производительность}
   \begin{columns}[T,onlytextwidth]
-    \column{0.53\textwidth}
-      \centering
-      \includegraphics[width=\linewidth,height=4.85cm,keepaspectratio,trim=0 500 0 0,clip]{images/online_store_brd_performance.png}
-    \column{0.44\textwidth}
-      {\small\bfseries Результат этого прогона}\par\vspace{0.10cm}
-      \begin{itemize}\scriptsize
-        \setlength{\itemsep}{0.05cm}
-        \item C4, Sequence и API прошли структурные проверки.
-        \item Бюджет: \textbf{340 / 500 USD} — удовлетворён.
-        \item p95 ≤ 300 мс: \textcolor{Warning}{\textbf{не оценён}} — валидатора процентиля пока нет.
+    \column{0.48\textwidth}
+      \textbf{Распространение потока}
+      \begin{itemize}
+        \item пиковый RPS проходит по синхронным связям;
+        \item ветви учитывают вероятность и routing mode;
+        \item cache hit rate разделяет быстрый путь и обращение к БД.
       \end{itemize}
-      \vspace{0.05cm}
-      {\small\bfseries Два режима performance-входа}\par\vspace{0.10cm}
-      {\scriptsize\textbf{По умолчанию:} параметры C4 от LLM; черновая оценка.\par}
-      \vspace{0.07cm}
-      {\scriptsize\textbf{\texttt{--profiles}:} измерения или явные допущения; повторяемый расчёт.\par}
-      \vspace{0.12cm}
-      \tiny Отчёт рассчитывает поток и загрузку, но не заменяет нагрузочное тестирование. Источник параметров фиксируется в \texttt{run.json}.
+    \column{0.48\textwidth}
+      \textbf{Расчёт по узлам}
+      \begin{itemize}
+        \item ёмкость = реплики × каналы / время обслуживания;
+        \item вычисляются utilization, ожидание и средний ответ;
+        \item самый длинный синхронный путь выделяется отдельно.
+      \end{itemize}
+  \end{columns}
+  \vspace{0.25cm}
+  \fcolorbox{Line}{Panel}{\parbox{0.94\textwidth}{\small
+    Для быстрого запуска параметры берутся из C4-кандидата. Если есть измерения, \texttt{--profiles} подменяет их явным воспроизводимым каталогом.}}
+\end{frame}
+
+\begin{frame}{PDF: критический путь и загрузка компонентов}
+  \begin{columns}[c,onlytextwidth]
+    \column{0.62\textwidth}
+      \centering
+      \includegraphics[width=\linewidth,height=5.05cm,keepaspectratio,trim=40 430 100 85,clip]{images/online_store_brd_performance.png}
+    \column{0.34\textwidth}
+      \textbf{Результат примера}
+      \begin{itemize}
+        \item критический путь проходит через четыре узла:\\
+          \texttt{web\_client} $\rightarrow$ \texttt{edge\_lb} $\rightarrow$\\
+          \texttt{orders\_api} $\rightarrow$ \texttt{orders\_db};
+        \item оценка среднего пути: \textbf{33,53 мс};
+        \item наибольшая загрузка: \textbf{75\%} у \texttt{orders\_api};
+        \item ниже в PDF приведена таблица всех компонентов.
+      \end{itemize}
   \end{columns}
 \end{frame}
 
