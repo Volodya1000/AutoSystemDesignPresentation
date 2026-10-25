@@ -164,44 +164,22 @@ uv run python scripts/generate_from_brd.py `
   \vspace{0.35cm}
   \begin{itemize}
     \item результат создаётся в \texttt{output/online\_store\_brd/};
-    \item сервер и формат диаграмм берутся из конфигурации;
     \item одна команда запускает все стадии и сохраняет связанные результаты.
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Каталог результата: 16 связанных артефактов}
-  \noindent{\footnotesize Общий префикс имён: \texttt{online\_store\_brd\_}\par}
-  \vspace{0.20cm}
+\begin{frame}{Входной BRD и созданные артефакты}
   \begin{columns}[T,onlytextwidth]
-    \column{0.49\textwidth}
-      \textbf{C4 и проверка ограничений}
-      \begin{itemize}\footnotesize
-        \item \texttt{c4.png} — схема компонентов;
-        \item \texttt{c4.puml} — редактируемая диаграмма;
-        \item \texttt{c4.json} — модель графа;
-        \item \texttt{nfr\_coverage.json} — проверка NFR.
-      \end{itemize}
-      \vspace{0.17cm}
-      \textbf{Анализ производительности}
-      \begin{itemize}\footnotesize
-        \item \texttt{performance\_analysis.pdf} — отчёт;
-        \item \texttt{performance\_analysis.json} — расчёты.
-      \end{itemize}
-    \column{0.49\textwidth}
-      \textbf{Sequence для FR-001 и FR-002}
-      \begin{itemize}\footnotesize
-        \item \texttt{roles.json} — роли участников;
-        \item \texttt{seq\_fr\_001.png}, \texttt{.puml}, \texttt{\_ast.json};
-        \item \texttt{seq\_fr\_002.png}, \texttt{.puml}, \texttt{\_ast.json}.
-      \end{itemize}
-      {\footnotesize Изображения, редактируемые диаграммы и модели взаимодействий.\par}
-      \vspace{0.17cm}
-      \textbf{Согласование API}
-      \begin{itemize}\footnotesize
-        \item \texttt{api\_design.json} — модель операций;
-        \item \texttt{api\_openapi.json} — контракт API;
-        \item \texttt{api\_swagger.html} — просмотр в браузере.
-      \end{itemize}
+    \column{0.39\textwidth}
+      \centering
+      \textbf{Входной документ}\par\vspace{0.18cm}
+      \includegraphics[width=\linewidth,keepaspectratio,
+        trim=0bp 447bp 0bp 0bp,clip]{images/online_store_input_output_tree.png}\par
+    \column{0.59\textwidth}
+      \centering
+      \textbf{Результаты генерации}\par\vspace{0.18cm}
+      \includegraphics[width=\linewidth,height=5.1cm,keepaspectratio,
+        trim=55bp 57bp 0bp 145bp,clip]{images/online_store_input_output_tree.png}\par
   \end{columns}
 \end{frame}
 
@@ -465,7 +443,7 @@ uv run python scripts/generate_from_brd.py `
   \end{columns}
 \end{frame}
 
-\begin{frame}{Критический путь}
+\begin{frame}{Критический путь {\footnotesize (фрагмент сгенерированного PDF-отчёта)}}
   \centering
   {\small Оценка средней задержки синхронного пути: \textbf{33,53 мс}\par}
   \vspace{0.12cm}
@@ -473,7 +451,7 @@ uv run python scripts/generate_from_brd.py `
     trim=150bp 474bp 150bp 185bp,clip]{images/online_store_brd_performance_report.pdf}\par
 \end{frame}
 
-\begin{frame}{Загрузка компонентов}
+\begin{frame}{Загрузка компонентов {\footnotesize (фрагмент сгенерированного PDF-отчёта)}}
   \centering
   \includegraphics[page=1,width=\textwidth,height=5.1cm,keepaspectratio,
     trim=55bp 315bp 42bp 400bp,clip]{images/online_store_brd_performance_report.pdf}\par
