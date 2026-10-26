@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_LEFT_RIGHT()
+
+title C4 Container: online_store_brd\nBudget 250/500 USD | Peak util 75% | Path mean 34 ms
+
+Person_Ext(web_client, "web_client", "external traffic source")
+
+System_Boundary(system_boundary, "Система") {
+  Container(edge_lb, "edge_lb", "Балансировщик", "replicas=1, concurrency=1000, mean=1 ms, cost=$20/mo")
+  Container(orders_api, "orders_api", "Сервис", "replicas=1, concurrency=200, mean=15 ms, cost=$80/mo")
+  ContainerDb(orders_db, "orders_db", "База данных", "replicas=1, concurrency=150, mean=8 ms, cost=$120/mo, role=primary, shards=1")
+  Container(orders_cache, "orders_cache", "Кэш", "replicas=1, concurrency=150, mean=2 ms, cost=$30/mo, hit_rate=80%")
+}
+
+Rel(web_client, edge_lb, "sync_rest_http", "5 ms network")
+Rel(edge_lb, orders_api, "sync_grpc", "2 ms network")
+Rel(orders_api, orders_cache, "sync_rest_http", "1 ms network")
+Rel(orders_api, orders_db, "sync_database_tcp", "1 ms network")
+@enduml
